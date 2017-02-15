@@ -2,7 +2,7 @@
 
 current: target
 
-target pngtarget pdftarget vtarget acrtarget: fit.hyb.2.nb.nb.1.1000.stan.Rout 
+target pngtarget pdftarget vtarget acrtarget: fit.hyb.2.bb.nb.1.1000.nim.Rout 
 
 ##################################################################
 

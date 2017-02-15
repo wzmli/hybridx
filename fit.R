@@ -92,7 +92,7 @@ paramsfun <- function(vv,tt,pp,proc,obs){
     params <- c(params,"Ihat")
   }
   if(pp %in% c("jags","nim")){
-    params <- c(params,"obs")
+    params <- c(params,"obs","ker")
   }
   if(proc %in% c("bb","nb")){
     params <- c(params,"pDis")
