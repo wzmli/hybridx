@@ -2,7 +2,7 @@
 
 current: target
 
-target pngtarget pdftarget vtarget acrtarget: fit.hyb.2.bb.nb.1.1000.nim.Rout 
+target pngtarget pdftarget vtarget acrtarget: fit.hyb.2.nb.nb.1.1000.stan.Rout 
 
 ##################################################################
 
@@ -26,6 +26,9 @@ templates.%.Rout: name.R parameters.CBB.R process.R observations.R bugstemplate.
 	$(run-R)
 
 fit.hyb.2.bb.nb.1.1000.nim.Rout:
+fit.hyb.1.b.p.1.1000.jags.Rout:
+fit.hyb.2.nb.nb.1.1000.stan.Rout:
+
 fit.%.Rout: name.R sim.%.Rout templates.%.Rout fit.R
 	$(run-R)
 
