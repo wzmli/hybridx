@@ -57,6 +57,5 @@ processfun <- function(ty="dis",proc="b"){
   return(code)
 }
 
-process_code <- processfun(ty=type,proc=process)
 
 

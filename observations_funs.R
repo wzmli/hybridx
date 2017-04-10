@@ -39,5 +39,3 @@ obsfun <- function(ty="dis",obsp="b"){
   code <- c(outterloop,innerloop)
   return(code)
 }
-
-observation_code <- obsfun(ty=type,obsp=observation)

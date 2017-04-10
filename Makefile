@@ -2,7 +2,7 @@
 
 current: target
 
-target pngtarget pdftarget vtarget acrtarget: collect_stan_fc.Rout 
+target pngtarget pdftarget vtarget acrtarget: fit.hyb.2.nb.nb.1.1000.stan.Rout 
 
 ##################################################################
 
@@ -36,15 +36,19 @@ sim.%.Rout: simfuns.R parameters.CBB.R name.R simulate.CBB.R
 	$(run-R)
 
 templates.hyb.1.bb.p.1.1000.jags.Rout:
-templates.%.Rout: name.R parameters.CBB.R process.R observations.R bugstemplate.R process_stan.R observation_stan.R stantemplate.R 	
+templates.%.Rout: name.R parameters.CBB.R process_funs.R observations_funs.R bugstemplate_funs.R bugstemplate.R process_stan.R observation_stan.R stantemplate.R 	
 	$(run-R)
 
 fit.hyb.2.bb.nb.1.1000.nim.Rout:
-fit.hyb.1.b.p.1.1000.jags.Rout:
-fit.hyb.2.nb.nb.1.1000.stan.Rout:
+
 
 fit.%.Rout: name.R sim.%.Rout templates.%.Rout fit.R
 	$(run-R)
+
+
+Sources += source.R
+
+source.Rout: source.R
 
 
 # Sources += collect_results_stan.R
@@ -114,7 +118,7 @@ testing: run_all
 	bash run_all
 
 clean:
-	rm -f *.nimble.R *.buggen *.wrapR.r *.Rout *.nimcode *.stan *.init.R *.data.R *.Rlog *.wrapR.rout .sim* .template* .fit* *.jags *.nim jags_dir/data/*.Rds jags_dir/templates/*.jags nimble_dir/templates/*.nimcode nimble_dir/data/*.Rds stan_dir/templates/*.stan stan_dir/data/*.Rds
+	rm -f *.nimble.R *.buggen *.wrapR.r *.Rout *.nimcode *.stan *.init.R *.data.R *.Rlog *.wrapR.rout .sim* .template* .fit* *.jags *.nim jags_dir/data/*.Rds jags_dir/templates/templates* nimble_dir/templates/*.nimcode nimble_dir/data/*.Rds stan_dir/templates/*.stan stan_dir/data/*.Rds
 
 new: clean
 	rm -f *.Rds
