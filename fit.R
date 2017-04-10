@@ -106,12 +106,13 @@ paramsfun <- function(vv,tt,pp,proc,obs){
 params <- paramsfun(vv=version,tt=type,pp=plat,proc=process,obs=observation)
 
 
-source(paste("templates",type,version,process,observation,seed,iterations,plat,"nimcode",sep="."))
+source(paste("./nimble_dir/templates/templates",type,version,process,observation,seed,iterations,plat,"nimcode",sep="."))
 mcmcs <- c("jags"
            ,"nimble"
            ,"nimble_slice") 
 
 if(plat == "nim"){
+  datadir <- "./nimble_dir/data/"
   nimmod <- nimbleModel(code=nimcode,constants=nimcon,data=nimdata,inits=niminits)
   Cnimmod <- compileNimble(nimmod)
   configMOD <- configureMCMC(nimmod)
@@ -124,7 +125,8 @@ if(plat == "nim"){
   }
 
 if(plat == "jags"){
-  modfile <- paste("templates",type,version,process,observation,seed,iterations,plat,sep=".")
+  datadir <- "./jags_dir/data/"
+  modfile <- paste("./jags_dir/templates/templates",type,version,process,observation,seed,iterations,plat,sep=".")
   MCMCtime <- system.time(FitModel <- jags(data=c(nimdata,nimcon)
                    , inits=niminits
                    , param = params
@@ -138,7 +140,8 @@ if(plat == "jags"){
 
 
 if(plat == "stan"){
-  modfile <- paste("templates",type,version,process,observation,seed,iterations,plat,sep=".")
+  datadir <- "./stan_dir/data/"
+  modfile <- paste("./stan_dir/templates/templates",type,version,process,observation,seed,iterations,plat,sep=".")
   FitModel <- stan(file=modfile
                    , data=c(nimdata,nimcon)
                    , init=niminits
@@ -152,6 +155,6 @@ if(plat == "stan"){
 }
 
 mcmc_results <- list(FitModel,MCMCtime,dat)
-saveRDS(mcmc_results,file=paste(type,version,process,observation,seed,iterations,plat,"Rds",sep="."))
+saveRDS(mcmc_results,file=paste(datadir,paste(type,version,process,observation,seed,iterations,plat,"Rds",sep="."),sep=""))
 
 # rdnosave()

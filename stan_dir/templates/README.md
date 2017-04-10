@@ -1,0 +1,1 @@
+This folder is for individual fitted data using Stan

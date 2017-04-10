@@ -2,13 +2,27 @@
 
 current: target
 
-target pngtarget pdftarget vtarget acrtarget: fit.hyb.2.bb.nb.1.1000.nim.Rout 
+target pngtarget pdftarget vtarget acrtarget: collect_stan_fc.Rout 
 
 ##################################################################
 
-Sources += Makefile stuff.mk LICENSE.md
-include stuff.mk
--include $(ms)/git.def
+Sources = Makefile .gitignore README.md LICENSE
+
+## ADVANCED
+## The recommended way to change these directories is with a local makefile. 
+## The recommended way to make a local makefile is to push a file with a specific name, and then manually link local.mk to your specific local makefile
+## local.mk does not exist out of the box; this should not cause problems
+dirroot = ./
+code = $(dirroot)/code
+data = $(dirroot)/data
+
+-include local.mk
+ms = $(code)/makestuff
+
+# This is the local configuration we happen to be using right now
+Sources += dev.mk
+dev:
+	/bin/ln -fs dev.mk local.mk
 
 Sources += todo.md
 
@@ -100,7 +114,7 @@ testing: run_all
 	bash run_all
 
 clean:
-	rm -f *.nimble.R *.buggen *.wrapR.r *.Rout *.nimcode *.stan *.init.R *.data.R *.Rlog *.wrapR.rout .sim* .template* .fit* *.jags *.nim
+	rm -f *.nimble.R *.buggen *.wrapR.r *.Rout *.nimcode *.stan *.init.R *.data.R *.Rlog *.wrapR.rout .sim* .template* .fit* *.jags *.nim jags_dir/data/*.Rds jags_dir/templates/*.jags nimble_dir/templates/*.nimcode nimble_dir/data/*.Rds stan_dir/templates/*.stan stan_dir/data/*.Rds
 
 new: clean
 	rm -f *.Rds
@@ -110,8 +124,13 @@ run_dis:
 
 #############
 
+### Makestuff
+
+Sources += $(wildcard $(ms)/*.mk)
+Sources += $(wildcard $(ms)/RR/*.*)
+Sources += $(wildcard $(ms)/wrapR/*.*)
+
+-include $(ms)/os.mk
 -include $(ms)/git.mk
 -include $(ms)/visual.mk
--include $(ms)/linux.mk
 -include $(ms)/wrapR.mk
--include rmd.mk

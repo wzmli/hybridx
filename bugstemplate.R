@@ -66,7 +66,10 @@ cat(nimstart[1]
      , process_code[3]
      , observation_code[2]
      , iterloop[2]
-     , nimstart[2],file=paste(rtargetname,".nimcode",sep=""))
+     , nimstart[2]
+     , file=paste("./nimble_dir/templates/", 
+        paste(rtargetname,".nimcode",sep=""),sep="")
+)
 
 cat("model{"
     , priorfun(ver=version,ty=type)
@@ -77,4 +80,4 @@ cat("model{"
     , process_code[3]
     , observation_code[2]
     , iterloop[2]
-    , "}",file=paste(rtargetname))
+    , "}",file=paste("./jags_dir/templates/",rtargetname,sep=""))

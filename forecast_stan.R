@@ -88,7 +88,7 @@ qt <- function(n){
 
 #### forecast ----
 
-stanfilenames <- list.files(path="./stan10k/"
+stanfilenames <- list.files(path="./stan_dir/data/"
                             ,pattern=paste(fctype[3],"."
                                            ,fctype[4],"."
                                            ,fctype[5],"."
@@ -96,7 +96,7 @@ stanfilenames <- list.files(path="./stan10k/"
                                            ,".",sep=""))
 
 forecast <- function(n){
-  stanobj <- readRDS(paste("./stan10k/",n,sep=""))
+  stanobj <- readRDS(paste("./stan_dir/data/",n,sep=""))
   
   name <- unlist(strsplit(n,"[.]"))
   stanmod <- stanobj[[1]]
@@ -228,8 +228,12 @@ t1 <- system.time(stanforecast <- lapply(stanfilenames,forecast))
 print(t1)
 print(stanforecast[[1]])
 
-saveRDS(stanforecast,file=paste(fctype[2], fctype[3]
-                                ,fctype[4]
-                                ,fctype[5]
-                                ,fctype[6]
-                                ,"fc.rds",sep="_"))
+saveRDS(stanforecast,file=paste("./stan_dir/results/",
+	paste(fctype[2]
+		, fctype[3]
+		, fctype[4]
+		, fctype[5]
+		, fctype[6]
+      , "fc.rds",sep=".")
+	, sep="")
+	)
