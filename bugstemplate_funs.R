@@ -7,7 +7,12 @@ priorfun <- function(ver=1,ty="dis",pl="jags"){
   for(t in 1:lag){
   ","
     ker[t] <- exp((kerShape-1)*log(t) - (t)/(kerPos*lag))
-  }")
+  }
+  for(i in 1:lag){
+  	tempMGI[i] <- i*ker[i]/sum(ker[1:lag])
+  }
+  MGI <- sum(tempMGI[1:lag])
+  ")
   version_prior <- "
   effprop ~ dbeta(effa,effb)
   repprop ~ dbeta(repa,repb)

@@ -2,7 +2,7 @@
 
 current: target
 
-target pngtarget pdftarget vtarget acrtarget: fit.hyb.2.nb.nb.1.1000.stan.Rout 
+target pngtarget pdftarget vtarget acrtarget: fit.dis.1.bb.bb.1.jags.Rout 
 
 ##################################################################
 
@@ -30,16 +30,16 @@ Sources += $(wildcard *.R)
 
 # See name.R for name parsing
 
-sim.dis.1.bb.p.1.4000.nim.Rout:
+sim.dis.1.bb.p.1.nim.Rout:
 
 sim.%.Rout: simfuns.R parameters.CBB.R name.R simulate.CBB.R
 	$(run-R)
 
-templates.hyb.1.bb.p.1.1000.jags.Rout:
+templates.hyb.1.bb.p.1.jags.Rout:
 templates.%.Rout: name.R parameters.CBB.R process_funs.R observations_funs.R bugstemplate_funs.R bugstemplate.R process_stan.R observation_stan.R stantemplate.R 	
 	$(run-R)
 
-fit.hyb.2.bb.nb.1.1000.nim.Rout:
+fit.dis.1.bb.bb.1.jags.Rout:
 
 
 fit.%.Rout: name.R sim.%.Rout templates.%.Rout fit.R

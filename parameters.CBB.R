@@ -42,6 +42,7 @@ ker <- rep(1/lag,lag)
 kerShape <- 5
 kerPos <- 0.5
 kerSize <- 2
+tempMGI <- rep(1/lag,lag)
 
 ksshape <- kerShape
 ksrate <- kerShape
@@ -69,3 +70,5 @@ SIGrate <- 0.1
 #MCMC stuff
 #iterations?
 mchains <- 4
+mthin <- 1
+miter <- 1000

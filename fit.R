@@ -81,7 +81,7 @@ nimcon <- c(conlist,conver(version),contype(type),conproc(process),conobs(observ
 
 
 paramsfun <- function(vv,tt,pp,proc,obs){
-  params <- c("R0","effprop","repprop","kerShape","kerPos")
+  params <- c("R0","effprop","repprop","kerShape","kerPos","MGI")
   if(version==2){
     params <- c(params,"effrep","effrepprop")
   }
@@ -92,7 +92,7 @@ paramsfun <- function(vv,tt,pp,proc,obs){
     params <- c(params,"Ihat")
   }
   if(pp %in% c("jags","nim")){
-    params <- c(params,"obs","ker")
+    params <- c(params,"obs","ker","tempMGI")
   }
   if(proc %in% c("bb","nb")){
     params <- c(params,"pDis")
@@ -106,12 +106,12 @@ paramsfun <- function(vv,tt,pp,proc,obs){
 params <- paramsfun(vv=version,tt=type,pp=plat,proc=process,obs=observation)
 
 
-source(paste("./nimble_dir/templates/templates",type,version,process,observation,seed,iterations,plat,"nimcode",sep="."))
 mcmcs <- c("jags"
            ,"nimble"
            ,"nimble_slice") 
 
 if(plat == "nim"){
+source(paste("./nimble_dir/templates/templates",type,version,process,observation,seed,iterations,plat,sep="."))
   datadir <- "./nimble_dir/data/"
   nimmod <- nimbleModel(code=nimcode,constants=nimcon,data=nimdata,inits=niminits)
   Cnimmod <- compileNimble(nimmod)
@@ -126,16 +126,29 @@ if(plat == "nim"){
 
 if(plat == "jags"){
   datadir <- "./jags_dir/data/"
-  modfile <- paste("./jags_dir/templates/templates",type,version,process,observation,seed,iterations,plat,sep=".")
-  MCMCtime <- system.time(FitModel <- jags(data=c(nimdata,nimcon)
-                   , inits=niminits
-                   , param = params
-                   , model.file = modfile
-                   , n.iter = iterations
-                   , n.chains = length(niminits)
-  ))
-  FitModel <- as.mcmc(FitModel)
-  summary(FitModel)
+  modfile <- paste("./jags_dir/templates/templates",type,version,process,observation,seed,plat,sep=".")
+  jagsmod <- jags.model(data=c(nimdata,nimcon)
+                        , inits=niminits
+                        , file = modfile
+                        , n.chains = length(niminits)
+  )
+  
+  while(miter < 10000){
+    print(miter)
+  MCMCtime <- system.time(
+    FitModel <- coda.samples(model = jagsmod
+                            , n.iter = miter
+                            , n.thin = mthin
+                            , variable.names = params
+    )
+  )
+  
+  Rhatcalc <- gelman.diag(FitModel[,c("effprop","R0","repprop")])$psrf[,1]
+  miter <- miter*2
+  if(all(Rhatcalc<1.1)){
+    miter <- 110000
+  }
+  }
 }
 
 
@@ -154,7 +167,12 @@ if(plat == "stan"){
   FitModel <- As.mcmc.list(FitModel)
 }
 
-mcmc_results <- list(FitModel,MCMCtime,dat)
-saveRDS(mcmc_results,file=paste(datadir,paste(type,version,process,observation,seed,iterations,plat,"Rds",sep="."),sep=""))
 
+mcmc_results <- list(FitModel,MCMCtime,dat)
+
+print(summary(FitModel))
+print(Rhatcalc)
+if(all(Rhatcalc<1.1)){
+saveRDS(mcmc_results,file=paste(datadir,paste(type,version,process,observation,seed,plat,"Rds",sep="."),sep=""))
+}
 # rdnosave()
