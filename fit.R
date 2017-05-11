@@ -7,11 +7,13 @@ set.seed(seed)
 
 ## This is the part we want to sub data in instead of simulated data
 dat <- sim
-# dat <- head(sim,numobs)
+# dat$Iobs[lag+numobs+1 : lag+numobs+forecast] <- NA
+# numobs <- numobs + forecast
+
 # if(is.null(dat)){dat <- head(sim,numobs)}
 # if(plat %in% c("jags","nim")){
 #   NAmat <- dat
-#   NAmat[!is.numeric(NAmat)] <- NA
+#   NAmat[is.numeric(NAmat)] <- NA
 #   dat <- rbind(dat,head(NAmat,forecast))
 #   numobs <- nrow(dat)
 # }
@@ -81,7 +83,7 @@ nimcon <- c(conlist,conver(version),contype(type),conproc(process),conobs(observ
 
 
 paramsfun <- function(vv,tt,pp,proc,obs){
-  params <- c("R0","effprop","repprop","kerShape","kerPos","MGI")
+  params <- c("R0","effprop","repprop","kerShape","kerPos")
   if(version==2){
     params <- c(params,"effrep","effrepprop")
   }
@@ -92,7 +94,7 @@ paramsfun <- function(vv,tt,pp,proc,obs){
     params <- c(params,"Ihat")
   }
   if(pp %in% c("jags","nim")){
-    params <- c(params,"obs","ker","tempMGI")
+    params <- c(params,"obs","ker","tempMGI","MGI")
   }
   if(proc %in% c("bb","nb")){
     params <- c(params,"pDis")
@@ -106,12 +108,12 @@ paramsfun <- function(vv,tt,pp,proc,obs){
 params <- paramsfun(vv=version,tt=type,pp=plat,proc=process,obs=observation)
 
 
-mcmcs <- c("jags"
-           ,"nimble"
-           ,"nimble_slice") 
+# mcmcs <- c("jags"
+#            ,"nimble"
+#            ,"nimble_slice") 
 
 if(plat == "nim"){
-source(paste("./nimble_dir/templates/templates",type,version,process,observation,seed,iterations,plat,sep="."))
+source(paste("./nimble_dir/templates/templates",type,version,process,observation,seed,plat,sep="."))
   datadir <- "./nimble_dir/data/"
   nimmod <- nimbleModel(code=nimcode,constants=nimcon,data=nimdata,inits=niminits)
   Cnimmod <- compileNimble(nimmod)
@@ -119,8 +121,16 @@ source(paste("./nimble_dir/templates/templates",type,version,process,observation
   configMOD$addMonitors(params)
   Bmcmc <- buildMCMC(configMOD)
   Cmcmc <- compileNimble(Bmcmc,project = nimmod)
-  MCMCtime <- system.time(FitModel <-runMCMC(Cmcmc,niter=iterations,nchains=length(niminits),inits=niminits,returnCodaMCMC = TRUE))
-
+  while(miter < 1000000){
+    print(miter)
+  MCMCtime <- system.time(FitModel <-runMCMC(Cmcmc,niter=miter,nburnin = floor(miter/2),nchains=length(niminits),inits=niminits,returnCodaMCMC = TRUE))
+    
+    Rhatcalc <- gelman.diag(FitModel[,c("effprop","R0","repprop")])$psrf[,1]
+    miter <- miter*2
+    if(all(Rhatcalc<1.1)){
+      miter <- 1000*1000 + 1
+    }
+  }
   summary(FitModel)
   }
 
@@ -133,7 +143,7 @@ if(plat == "jags"){
                         , n.chains = length(niminits)
   )
   
-  while(miter < 10000){
+  while(miter < 100000){
     print(miter)
   MCMCtime <- system.time(
     FitModel <- coda.samples(model = jagsmod
@@ -146,7 +156,7 @@ if(plat == "jags"){
   Rhatcalc <- gelman.diag(FitModel[,c("effprop","R0","repprop")])$psrf[,1]
   miter <- miter*2
   if(all(Rhatcalc<1.1)){
-    miter <- 110000
+    miter <- 1100000
   }
   }
 }
@@ -159,7 +169,7 @@ if(plat == "stan"){
                    , data=c(nimdata,nimcon)
                    , init=niminits
                    , pars=params
-                   , iter=iterations
+                   , iter=miter
                    , chains=length(niminits)
   )
   print(FitModel)
@@ -168,7 +178,7 @@ if(plat == "stan"){
 }
 
 
-mcmc_results <- list(FitModel,MCMCtime,dat)
+mcmc_results <- list(FitModel,MCMCtime,miter,sim)
 
 print(summary(FitModel))
 print(Rhatcalc)
