@@ -164,19 +164,25 @@ if(plat == "jags"){
 
 if(plat == "stan"){
   datadir <- "./stan_dir/data/"
-  modfile <- paste("./stan_dir/templates/templates",type,version,process,observation,seed,iterations,plat,sep=".")
-  FitModel <- stan(file=modfile
-                   , data=c(nimdata,nimcon)
-                   , init=niminits
-                   , pars=params
-                   , iter=miter
-                   , chains=length(niminits)
+  modfile <- paste("./stan_dir/templates/templates",type,version,process,observation,seed,plat,sep=".")
+  buildstan <- stan_model(file=modfile
+#                    , data=c(nimdata,nimcon)
+#                    , init=niminits
+#                    , pars=params
+#                    , iter=miter
+#                    , chains=length(niminits)
   )
-  print(FitModel)
+  while(miter < 10000){
+  FitModel <- sampling(buildstan,data=c(nimdata,nimcon),init=niminits,pars=params,chains=length(niminits))
   MCMCtime <- get_elapsed_time(FitModel)
   FitModel <- As.mcmc.list(FitModel)
+  Rhatcalc <- gelman.diag(FitModel[,c("effprop","R0","repprop")])$psrf[,1]
+  miter <- miter*2
+  if(all(Rhatcalc<1.1)){
+    miter <- 11000
+  }
+  }
 }
-
 
 mcmc_results <- list(FitModel,MCMCtime,miter,sim)
 
