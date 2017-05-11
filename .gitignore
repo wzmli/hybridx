@@ -1,0 +1,12 @@
+.*
+*.wrapR.r
+*.wrapR.rout
+*.Rout
+*.Rlog
+
+*.jags
+*.stan
+*.nim
+
+
+*.Rds
