@@ -20,11 +20,11 @@ data = $(dirroot)/data
 ms = $(code)/makestuff
 
 # This is the local configuration we happen to be using right now
-Sources += dev.mk
+# Sources += dev.mk
 dev:
 	/bin/ln -fs dev.mk local.mk
 
-Sources += todo.md
+# Sources += todo.md
 
 Sources += $(wildcard *.R)
 
