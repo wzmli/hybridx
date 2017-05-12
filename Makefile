@@ -68,26 +68,10 @@ collect_pars_stan.Rout:
 
 #####plots
 
-forecast_plot.Rout: forecast_plot.R
-%_plot.Rout: %_results.RDS %_plot.R
+
+parameter_plot.Rout: ./jags_dir/results/jagsPAR.RDS ./stan_dir/results/stanPAR.RDS name.R parameter_plot.R
 	$(run-R)
 
-gen.plot.Rout: jagsGEN.RDS nimGEN2.RDS stanGEN.RDS gen.plot.R
-	$(run-R)
-
-all.plot.Rout: forecast.plot.Rout parameter.plot.Rout gen.plot.Rout all.plot.R
-	$(run-R)
-
-#####
-
-
-pooljags.Rout: pooljags.R
-
-bbplot.Rout: jagsPAR.RDS nimPARd.RDS nimPARh.RDS stanPAR.RDS parameter.plot.R
-	$(run-R)
-
-testing: run_all
-	bash run_all
 
 cleanall:
 	rm -f *.nimble.R *.buggen *.wrapR.r *.Rout *.nimcode *.stan *.init.R *.data.R *.Rlog *.wrapR.rout .sim* .template* .fit* *.jags *.nim jags_dir/data/*.Rds jags_dir/templates/templates* nimble_dir/templates/*.nimcode nimble_dir/data/*.Rds stan_dir/templates/*.stan stan_dir/data/*.Rds

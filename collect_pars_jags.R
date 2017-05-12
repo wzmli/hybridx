@@ -35,7 +35,7 @@ getparjags <- function(n){
                         , process=name[3]
                         , observation=name[4]
                         , seed = name[5]
-                        , platform = name[7]
+                        , platform = name[6]
                         , parameters = parlist2
                         , real = real2
                         , Rhat = Rhatcalc$psrf[,1]
