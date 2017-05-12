@@ -113,14 +113,18 @@ pardf3 <- (pardf
 gg <- (ggplot(pardf3,aes(x=observation,y=BIAS,color=platform))
        + geom_point(size=3,aes(shape=type_ver))
        + scale_shape_manual(values=c(1,2,16,17),name="Method"
-                            ,labels=c("Discrete","Dis. Decorrelation"
-                                      ,"Continuous", "Cont. Decorrelation"))
+                            ,labels=c("Discrete"
+                                      # , "Dis. Decorrelation"
+                                      , "Continuous"
+                                      # , "Cont. Decorrelation"
+                            )
+       )
        + ylab("BIAS")
        + xlab("observation process")
        + facet_grid(parameters~process)
        + theme_bw()
        + theme(axis.text.x = element_text(angle=0))
-       + scale_color_brewer(palette = "Set1",name="Platform",
+       + scale_color_manual(name="Platform", values=c("black","blue"),
                             labels=c("JAGS","Stan"))
 
 )
@@ -129,14 +133,18 @@ print(gg)
 gg2 <- (ggplot(pardf3,aes(x=observation,y=RMSE,color=platform))
         + geom_point(size=3,aes(shape=type_ver))
         + scale_shape_manual(values=c(1,2,16,17),name="Method"
-                             ,labels=c("Discrete","Dis. Decorrelation"
-                                       ,"Continuous", "Cont. Decorrelation"))
+                             ,labels=c("Discrete"
+                                       # , "Dis. Decorrelation"
+                                       , "Continuous"
+                                       # , "Cont. Decorrelation"
+                                       )
+                             )
         + ylab("RMSE")
         + xlab("observation process")
         + facet_grid(parameters~process)
         + theme_bw()
         + theme(axis.text.x = element_text(angle=0))
-        + scale_color_brewer(palette = "Set1",name="Platform",
+        + scale_color_manual(name="Platform", values=c("black","blue"),
                              labels=c("JAGS","Stan"))
 
 )
@@ -146,11 +154,13 @@ print(gg2)
 
 gg3 <- (ggplot(pardf3,aes(x=observation,y=cov90,color=platform))
         + geom_point(size=3,aes(shape=type_ver))
-        + scale_color_brewer(palette = "Set1",name="Platform",
-                             labels=c("Jags","JAGS","Stan"))
         + scale_shape_manual(values=c(1,2,16,17),name="Method"
-                             ,labels=c("Discrete","Dis. Decorrelation"
-                                       ,"Continuous", "Cont. Decorrelation"))
+                             ,labels=c("Discrete"
+                                       # , "Dis. Decorrelation"
+                                       , "Continuous"
+                                       # , "Cont. Decorrelation"
+                             )
+        )
         + ylab("Coverage")
         + xlab("Observation process")
         # + ylim(c(0,1.2))
@@ -158,6 +168,8 @@ gg3 <- (ggplot(pardf3,aes(x=observation,y=cov90,color=platform))
         + facet_grid(parameters~process,scales = "free_y")
         + theme_bw()
         + theme(axis.text.x = element_text(angle=0))
+        + scale_color_manual(name="Platform", values=c("black","blue"),
+                             labels=c("JAGS","Stan"))
         + annotate("rect",xmin=0,xmax=6,
                    ymin=0.9-2*sqrt(0.9*0.1/100),
                    ymax=0.9+2*sqrt(0.9*0.1/100),alpha=0.2)
@@ -167,11 +179,15 @@ print(gg3)
 
 gg4 <- (ggplot(pardf3,aes(x=observation,y=TPES,color=platform))
         + geom_point(size=3,aes(shape=type_ver))
-        + scale_color_brewer(palette = "Set1",name="Platform",
-                             labels=c("JAGS","Stan"))
         + scale_shape_manual(values=c(1,2,16,17),name="Method"
-                             ,labels=c("Discrete","Dis. Decorrelation"
-                                       ,"Continuous", "Cont. Decorrelation"))
+                             ,labels=c("Discrete"
+                                       # , "Dis. Decorrelation"
+                                       , "Continuous"
+                                       # , "Cont. Decorrelation"
+                             )
+        )
+        + scale_color_manual(name="Platform", values=c("black","blue"),
+                             labels=c("JAGS","Stan"))
         + ylab("Time per Effective Sample")
         + xlab("Observation process")
         # + ylim(c(0,1.2))
@@ -192,11 +208,15 @@ print(gg4)
 gg5 <- (ggplot(pardf3,aes(x=Time,y=ESS25,color=platform))
         + geom_errorbar(aes(ymin=ESSmin,ymax=ESS50))
         + geom_point(size=3,aes(shape=type_ver))
-        + scale_color_brewer(palette = "Set1",name="Platform",
-                             labels=c("JAGS","Stan"))
         + scale_shape_manual(values=c(1,2,16,17),name="Method"
-                             ,labels=c("Discrete","Dis. Decorrelation"
-                                       ,"Continuous", "Cont. Decorrelation"))
+                             ,labels=c("Discrete"
+                                       # , "Dis. Decorrelation"
+                                       , "Continuous"
+                                       # , "Cont. Decorrelation"
+                             )
+        )
+        + scale_color_manual(name="Platform", values=c("black","blue"),
+                             labels=c("JAGS","Stan"))
         + ylab("ESS (errorbars correspond to min, 25%, 50% quantiles)")
         + xlab("Time")
 		  + scale_y_log10()
@@ -213,11 +233,15 @@ gg5 <- (ggplot(pardf3,aes(x=Time,y=ESS25,color=platform))
 gg6 <- (ggplot(pardf3,aes(x=observation,y=Rhat80,color=platform))
         + geom_errorbar(aes(ymin=Rhatmed,ymax=Rhat90))
         + geom_point(size=3,aes(shape=type_ver))
-        + scale_color_brewer(palette = "Set1",name="Platform",
-                             labels=c("JAGS","Stan"))
         + scale_shape_manual(values=c(1,2,16,17),name="Method"
-                             ,labels=c("Discrete","Dis. Decorrelation"
-                                       ,"Continuous", "Cont. Decorrelation"))
+                             ,labels=c("Discrete"
+                                       # , "Dis. Decorrelation"
+                                       , "Continuous"
+                                       # , "Cont. Decorrelation"
+                             )
+        )
+        + scale_color_manual(name="Platform", values=c("black","blue"),
+                             labels=c("JAGS","Stan"))
         + ylab("Rhat errorbars correspond to 50%, 80%, 90% quantiles")
         + xlab("Observation Process")
         # + ylim(c(0,1.2))
