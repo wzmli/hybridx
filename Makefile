@@ -57,44 +57,9 @@ source.Rout: source.R
 collect_results_stan.Rout: parameters.CBB.Rout collect_results_stan.R
 	$(run-R)
 
-%.plot.Rout: parameters.CBB.R simfuns.Rout ./temp_results/collect.results.%.2000.RDS plot.R
+
+collect_pars_%.Rout: parameters.CBB.Rout collect_pars_%.R
 	$(run-R)
-
-forecast.plot.Rout: jagsFC.RDS nimFC2.RDS stanFC.RDS forecast.plot.R
-	$(run-R)
-
-%.Rds: fit.%.Rout ;
-
-plot.%.Rout: %.Rds jagsplot.R
-	$(run-R)
-
-forecast.stan.%.Rout: parameters.CBB.R simfuns.R forecast_stan.R
-	$(run-R)
-
-forecast.nim.%.Rout: parameters.CBB.R simfuns.R forecast_nim.R
-	$(run-R)
-
-forecast.jags.%.Rout: parameters.CBB.R simfuns.R forecast_jags.R
-	$(run-R)
-
-gen.stan.%.Rout: gen_stan.R
-	$(run-R)
-
-gen.nim.%.Rout: gen_nim.R
-	$(run-R)
-
-gen.nimh.%.Rout: gen_nimh.R
-	$(run-R)
-
-gen.jags.%.Rout: gen_jags.R
-	$(run-R)
-
-collect_stan_fc.Rout: collect_stan_fc.R
-	$(run-R)
-
-parameter.plot.Rout: jagsPAR.RDS nimPARh.RDS stanPAR.RDS parameter.plot.R
-	$(run-R)
-
 
 #####plots
 
@@ -121,6 +86,9 @@ testing: run_all
 
 clean:
 	rm -f *.nimble.R *.buggen *.wrapR.r *.Rout *.nimcode *.stan *.init.R *.data.R *.Rlog *.wrapR.rout .sim* .template* .fit* *.jags *.nim jags_dir/data/*.Rds jags_dir/templates/templates* nimble_dir/templates/*.nimcode nimble_dir/data/*.Rds stan_dir/templates/*.stan stan_dir/data/*.Rds
+
+cleanout: 
+	rm -f *.wrapR.r *.Rout *.Rlog
 
 new: clean
 	rm -f *.Rds

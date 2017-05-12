@@ -1,0 +1,14 @@
+#!/bin/bash
+for modtype in dis; do
+    for version in 1; do
+	for process in bb; do
+	    for observation in nb; do
+		for seed in {226..230}; do
+		    for  platform in nim; do
+			make fit.$modtype.$version.$process.$observation.$seed.$platform.Rout
+			done
+       		    done
+		done	
+	    done
+        done
+    done
