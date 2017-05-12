@@ -124,42 +124,45 @@ source(paste("./nimble_dir/templates/templates",type,version,process,observation
   while(miter < 1000000){
     print(miter)
   MCMCtime <- system.time(FitModel <-runMCMC(Cmcmc,niter=miter,nburnin = floor(miter/2),nchains=length(niminits),inits=niminits,returnCodaMCMC = TRUE))
-    
     Rhatcalc <- gelman.diag(FitModel[,c("effprop","R0","repprop")])$psrf[,1]
     miter <- miter*2
+    print(Rhatcalc)
     if(all(Rhatcalc<1.1)){
       miter <- 1000*1000 + 1
     }
   }
-  summary(FitModel)
+  sampling_time <- MCMCtime
   }
 
 if(plat == "jags"){
   datadir <- "./jags_dir/data/"
   modfile <- paste("./jags_dir/templates/templates",type,version,process,observation,seed,plat,sep=".")
-  jagsmod <- jags.model(data=c(nimdata,nimcon)
+  system.time(jagsmod <- jags.model(data=c(nimdata,nimcon)
                         , inits=niminits
                         , file = modfile
+                        , n.adapt = 1000
                         , n.chains = length(niminits)
   )
+  )
+  turnoff <- TRUE
+  sampling_time <- 0
   
-  while(miter < 100000){
-    print(miter)
+  while(turnoff){
   MCMCtime <- system.time(
     FitModel <- coda.samples(model = jagsmod
-                            , n.iter = miter
+                            , n.iter = 2000
                             , n.thin = mthin
                             , variable.names = params
+                            , n.burnin = 3000
     )
   )
   
   Rhatcalc <- gelman.diag(FitModel[,c("effprop","R0","repprop")])$psrf[,1]
-  miter <- miter*2
-  if(all(Rhatcalc<1.1)){
-    miter <- 1100000
-  }
+  sampling_time <- sampling_time + MCMCtime
+  turnoff <- !all(Rhatcalc<1.1)
   }
 }
+
 
 
 if(plat == "stan"){
@@ -175,6 +178,7 @@ if(plat == "stan"){
   while(miter < 10000){
   FitModel <- sampling(buildstan,data=c(nimdata,nimcon),init=niminits,pars=params,chains=length(niminits))
   MCMCtime <- get_elapsed_time(FitModel)
+  sampling_time <- sum(MCMCtime[,2])
   FitModel <- As.mcmc.list(FitModel)
   Rhatcalc <- gelman.diag(FitModel[,c("effprop","R0","repprop")])$psrf[,1]
   miter <- miter*2
@@ -184,7 +188,8 @@ if(plat == "stan"){
   }
 }
 
-mcmc_results <- list(FitModel,MCMCtime,miter,sim)
+print(sampling_time)
+mcmc_results <- list(FitModel,sampling_time,sim)
 
 print(summary(FitModel))
 print(Rhatcalc)

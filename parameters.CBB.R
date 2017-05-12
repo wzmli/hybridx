@@ -71,4 +71,4 @@ SIGrate <- 0.1
 #iterations?
 mchains <- 4
 mthin <- 1
-miter <- 1000
+miter <- 2000
