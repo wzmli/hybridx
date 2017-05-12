@@ -14,7 +14,7 @@ getparstan <- function(n){
   stanmod <- stanobj[[1]]
   dat <- stanobj[[3]]
   parlist2 <- parlist[parlist %in% colnames(stanmod[[1]])]
-  #  Rhatcalc <- gelman.diag(stanmod[,parlist2])
+  Rhatcalc <- gelman.diag(stanmod[,parlist2])
   
   real <- c(dat$R0,dat$effprop,dat$repprop,dat$pDis,dat$repDis,dat$kerShape,dat$kerPos)
   real2 <- real[parlist %in% colnames(stanmod[[1]])]
