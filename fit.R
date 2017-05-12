@@ -7,16 +7,7 @@ set.seed(seed)
 
 ## This is the part we want to sub data in instead of simulated data
 dat <- sim
-# dat$Iobs[lag+numobs+1 : lag+numobs+forecast] <- NA
-# numobs <- numobs + forecast
 
-# if(is.null(dat)){dat <- head(sim,numobs)}
-# if(plat %in% c("jags","nim")){
-#   NAmat <- dat
-#   NAmat[is.numeric(NAmat)] <- NA
-#   dat <- rbind(dat,head(NAmat,forecast))
-#   numobs <- nrow(dat)
-# }
 
 myRound <- nimbleFunction(
   run=function(x=double()){
@@ -121,13 +112,14 @@ source(paste("./nimble_dir/templates/templates",type,version,process,observation
   configMOD$addMonitors(params)
   Bmcmc <- buildMCMC(configMOD)
   Cmcmc <- compileNimble(Bmcmc,project = nimmod)
+  miter <- miter*2
   while(miter < 1000000){
-    print(miter)
   MCMCtime <- system.time(FitModel <-runMCMC(Cmcmc,niter=miter,nburnin = floor(miter/2),nchains=length(niminits),inits=niminits,returnCodaMCMC = TRUE))
     Rhatcalc <- gelman.diag(FitModel[,c("effprop","R0","repprop")])$psrf[,1]
+    neff <- effectiveSize(FitModel)[c("effprop","R0","repprop")]
     miter <- miter*2
     print(Rhatcalc)
-    if(all(Rhatcalc<1.1)){
+    if(all(Rhatcalc<1.1,neff>400)){
       miter <- 1000*1000 + 1
     }
   }
@@ -150,22 +142,24 @@ if(plat == "jags"){
   while(turnoff){
   MCMCtime <- system.time(
     FitModel <- coda.samples(model = jagsmod
-                            , n.iter = 2000
+                            , n.iter = miter
                             , n.thin = mthin
                             , variable.names = params
-                            , n.burnin = 3000
+                            , n.burnin = miter
     )
   )
   
   Rhatcalc <- gelman.diag(FitModel[,c("effprop","R0","repprop")])$psrf[,1]
   sampling_time <- sampling_time + MCMCtime
-  turnoff <- !all(Rhatcalc<1.1)
+  neff <- effectiveSize(FitModel)[c("effprop","R0","repprop")]
+  turnoff <- !all(Rhatcalc<1.1,neff>400) 
   }
 }
 
 
 
 if(plat == "stan"){
+  miter = miter*2
   datadir <- "./stan_dir/data/"
   modfile <- paste("./stan_dir/templates/templates",type,version,process,observation,seed,plat,sep=".")
   buildstan <- stan_model(file=modfile
@@ -181,8 +175,9 @@ if(plat == "stan"){
   sampling_time <- sum(MCMCtime[,2])
   FitModel <- As.mcmc.list(FitModel)
   Rhatcalc <- gelman.diag(FitModel[,c("effprop","R0","repprop")])$psrf[,1]
+  neff <- effectiveSize(FitModel)[c("effprop","R0","repprop")]
   miter <- miter*2
-  if(all(Rhatcalc<1.1)){
+  if(all(Rhatcalc<1.1,neff>400)){
     miter <- 11000
   }
   }
@@ -193,7 +188,7 @@ mcmc_results <- list(FitModel,sampling_time,sim)
 
 print(summary(FitModel))
 print(Rhatcalc)
-if(all(Rhatcalc<1.1)){
+if(all(Rhatcalc<1.1,neff>400)){
 saveRDS(mcmc_results,file=paste(datadir,paste(type,version,process,observation,seed,plat,"Rds",sep="."),sep=""))
 }
 # rdnosave()

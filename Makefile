@@ -2,7 +2,7 @@
 
 current: target
 
-target pngtarget pdftarget vtarget acrtarget: collect_pars_jags.Rout 
+target pngtarget pdftarget vtarget acrtarget: fit.hyb.1.bb.nb.1.jags.Rout 
 
 ##################################################################
 
@@ -39,7 +39,7 @@ templates.hyb.1.bb.p.1.jags.Rout:
 templates.%.Rout: name.R parameters.CBB.R process_funs.R observations_funs.R bugstemplate_funs.R bugstemplate.R process_stan.R observation_stan.R stantemplate.R 	
 	$(run-R)
 
-fit.dis.1.bb.bb.1.jags.Rout:
+fit.hyb.1.bb.nb.1.jags.Rout:
 fit.dis.1.bb.bb.1.nim.Rout:
 fit.hyb.1.bb.nb.1.nim.Rout:
 fit.hyb.1.bb.nb.1.stan.Rout:
@@ -69,7 +69,7 @@ collect_pars_stan.Rout:
 #####plots
 
 
-parameter_plot.Rout: ./jags_dir/results/jagsPAR.RDS ./stan_dir/results/stanPAR.RDS name.R parameter_plot.R
+parameter_plot.Rout: ./jags_dir/results/jagsPAR.RDS ./nimble_dir/results/nimPAR.RDS ./stan_dir/results/stanPAR.RDS name.R parameter_plot.R
 	$(run-R)
 
 

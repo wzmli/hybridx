@@ -41,8 +41,8 @@ qfun <- function(x){
 
 plat1 <- readRDS(input_files[1])
 plat2 <- readRDS(input_files[2])
-# plat3 <- readRDS(input_files[3])
-parlist <- c(plat1[[1]],plat2[[1]]) #,plat3[[1]])
+plat3 <- readRDS(input_files[3])
+parlist <- c(plat1[[1]],plat2[[1]],plat3[[1]])
 
 # aa <- readRDS("temp.RDS")
 # parlist <- aa[[1]]
@@ -124,8 +124,8 @@ gg <- (ggplot(pardf3,aes(x=observation,y=BIAS,color=platform))
        + facet_grid(parameters~process)
        + theme_bw()
        + theme(axis.text.x = element_text(angle=0))
-       + scale_color_manual(name="Platform", values=c("black","blue"),
-                            labels=c("JAGS","Stan"))
+       + scale_color_manual(name="Platform", values=c("black","red","blue"),
+                            labels=c("JAGS","NIMBLE","Stan"))
 
 )
 print(gg)
@@ -144,8 +144,8 @@ gg2 <- (ggplot(pardf3,aes(x=observation,y=RMSE,color=platform))
         + facet_grid(parameters~process)
         + theme_bw()
         + theme(axis.text.x = element_text(angle=0))
-        + scale_color_manual(name="Platform", values=c("black","blue"),
-                             labels=c("JAGS","Stan"))
+        + scale_color_manual(name="Platform", values=c("black","red","blue"),
+                             labels=c("JAGS","NIMBLE","Stan"))
 
 )
 print(gg2)
@@ -168,8 +168,8 @@ gg3 <- (ggplot(pardf3,aes(x=observation,y=cov90,color=platform))
         + facet_grid(parameters~process,scales = "free_y")
         + theme_bw()
         + theme(axis.text.x = element_text(angle=0))
-        + scale_color_manual(name="Platform", values=c("black","blue"),
-                             labels=c("JAGS","Stan"))
+        + scale_color_manual(name="Platform", values=c("black","red","blue"),
+                             labels=c("JAGS","NIMBLE","Stan"))
         + annotate("rect",xmin=0,xmax=6,
                    ymin=0.9-2*sqrt(0.9*0.1/100),
                    ymax=0.9+2*sqrt(0.9*0.1/100),alpha=0.2)
@@ -186,8 +186,8 @@ gg4 <- (ggplot(pardf3,aes(x=observation,y=TPES,color=platform))
                                        # , "Cont. Decorrelation"
                              )
         )
-        + scale_color_manual(name="Platform", values=c("black","blue"),
-                             labels=c("JAGS","Stan"))
+        + scale_color_manual(name="Platform", values=c("black","red","blue"),
+                             labels=c("JAGS","NIMBLE","Stan"))
         + ylab("Time per Effective Sample")
         + xlab("Observation process")
         # + ylim(c(0,1.2))
@@ -215,14 +215,14 @@ gg5 <- (ggplot(pardf3,aes(x=Time,y=ESS25,color=platform))
                                        # , "Cont. Decorrelation"
                              )
         )
-        + scale_color_manual(name="Platform", values=c("black","blue"),
-                             labels=c("JAGS","Stan"))
+        + scale_color_manual(name="Platform", values=c("black","red","blue"),
+                             labels=c("JAGS","NIMBLE","Stan"))
         + ylab("ESS (errorbars correspond to min, 25%, 50% quantiles)")
         + xlab("Time")
 		  + scale_y_log10()
         # + ylim(c(0,1.2))
         + facet_grid(observation~process,scales = "free_y")
-        + theme_bw()
+        + theme_minimal()
         + theme(axis.text.x = element_text(angle=0))
         # + annotate("rect",xmin=0,xmax=6,
         #            ymin=0.9-2*sqrt(0.9*0.1/100),
@@ -240,8 +240,8 @@ gg6 <- (ggplot(pardf3,aes(x=observation,y=Rhat80,color=platform))
                                        # , "Cont. Decorrelation"
                              )
         )
-        + scale_color_manual(name="Platform", values=c("black","blue"),
-                             labels=c("JAGS","Stan"))
+        + scale_color_manual(name="Platform", values=c("black","red","blue"),
+                             labels=c("JAGS","NIMBLE","Stan"))
         + ylab("Rhat errorbars correspond to 50%, 80%, 90% quantiles")
         + xlab("Observation Process")
         # + ylim(c(0,1.2))
