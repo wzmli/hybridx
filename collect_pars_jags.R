@@ -13,10 +13,11 @@ jagsfilenames <- list.files(path="./jags_dir/data/",pattern="jags.Rds")
 
 getparjags <- function(n){
   jagsobj <- readRDS(paste("./jags_dir/data/",n,sep=""))
-  jagsmodraw <- jagsobj[[1]]
-  ndim <- nrow(jagsmodraw[[1]])
-  jagsthin <- lapply(jagsmodraw,function(x){mcmc(x,start=floor(ndim/2),end=ndim,thin=1)})
-  jagsmod <- as.mcmc.list(jagsthin)
+  # jagsmodraw <- jagsobj[[1]]
+  # ndim <- nrow(jagsmodraw[[1]])
+  # jagsthin <- lapply(jagsmodraw,function(x){mcmc(x,start=floor(ndim/2),end=ndim,thin=1)})
+  # jagsmod <- as.mcmc.list(jagsthin)
+  jagsmod <- jagsobj[[1]]
   dat <- jagsobj[[3]]
   parlist2 <- parlist[parlist %in% colnames(jagsmod[[1]])]
   Rhatcalc <- gelman.diag(jagsmod[,parlist2])

@@ -33,7 +33,7 @@ getparstan <- function(n){
                         , platform = name[7]
                         , parameters = parlist2
                         , real = real2
-                        #                        , Rhat = Rhatcalc$psrf[,1]
+                        , Rhat = Rhatcalc$psrf[,1]
                         , ESS = neff
                         , time = time
                         , parmat

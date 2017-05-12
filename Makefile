@@ -62,6 +62,9 @@ collect_pars_%.Rout: parameters.CBB.Rout collect_pars_%.R
 	$(run-R)
 
 collect_pars_jags.Rout:
+collect_pars_nim.Rout:
+collect_pars_stan.Rout:
+
 
 #####plots
 
@@ -86,10 +89,10 @@ bbplot.Rout: jagsPAR.RDS nimPARd.RDS nimPARh.RDS stanPAR.RDS parameter.plot.R
 testing: run_all
 	bash run_all
 
-clean:
+cleanall:
 	rm -f *.nimble.R *.buggen *.wrapR.r *.Rout *.nimcode *.stan *.init.R *.data.R *.Rlog *.wrapR.rout .sim* .template* .fit* *.jags *.nim jags_dir/data/*.Rds jags_dir/templates/templates* nimble_dir/templates/*.nimcode nimble_dir/data/*.Rds stan_dir/templates/*.stan stan_dir/data/*.Rds
 
-cleanout: 
+clean: 
 	rm -f *.wrapR.r *.Rout *.Rlog
 
 new: clean
