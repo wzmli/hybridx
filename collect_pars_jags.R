@@ -8,13 +8,14 @@ qtilesnames <- c("q2.5","q5","q10","q25","q50","q75","q90","q95","q97.5")
 qlist <- c(0.025,0.05,0.1,0.25,0.5,0.75,0.9,0.95,0.975)
 
 
-jagsfilenames <- list.files(path="./jags10k",pattern="jags.Rds")
+jagsfilenames <- list.files(path="./jags_dir/data/",pattern="jags.Rds")
 
 
 getparjags <- function(n){
-  jagsobj <- readRDS(paste("./jags10k/",n,sep=""))
+  jagsobj <- readRDS(paste("./jags_dir/data/",n,sep=""))
   jagsmodraw <- jagsobj[[1]]
-  jagsthin <- lapply(jagsmodraw,function(x){mcmc(x,start=5001,end=10000,thin=1)})
+  ndim <- nrow(jagsmodraw[[1]])
+  jagsthin <- lapply(jagsmodraw,function(x){mcmc(x,start=floor(ndim/2),end=ndim,thin=1)})
   jagsmod <- as.mcmc.list(jagsthin)
   dat <- jagsobj[[3]]
   parlist2 <- parlist[parlist %in% colnames(jagsmod[[1]])]
@@ -51,4 +52,4 @@ print(t2)
 
 print(jagspar[[1]])
 jagslist <- list(jagspar)
-saveRDS(jagslist,file="jagsPAR.RDS")
+saveRDS(jagslist,file="./jags_dir/results/jagsPAR.RDS")

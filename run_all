@@ -1,10 +1,10 @@
 #!/bin/bash
-for modtype in dis; do
+for modtype in hyb; do
     for version in 1; do
 	for process in bb; do
 	    for observation in nb; do
-		for seed in {226..230}; do
-		    for  platform in nim; do
+		for seed in {1..5}; do
+		    for  platform in jags; do
 			make fit.$modtype.$version.$process.$observation.$seed.$platform.Rout
 			done
        		    done
