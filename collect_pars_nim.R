@@ -1,7 +1,8 @@
-
 library(nimble)
 library(R2jags)
 library(coda)
+
+targetname <-unlist(strsplit(rtargetname,"[_]"))
 
 parlist <- c("R0","effprop","repprop","pDis","repDis","kerShape","kerPos")
 
@@ -10,7 +11,7 @@ qtilesnames <- c("q2.5","q5","q10","q25","q50","q75","q90","q95","q97.5")
 qlist <- c(0.025,0.05,0.1,0.25,0.5,0.75,0.9,0.95,0.975)
 
 
-nimfilenames <- list.files(path="./nimble_dir/data/",pattern="nim.Rds")
+nimfilenames <- list.files(path="./nimble_dir/data/",pattern=targetname[3])
 
 
 getparnim <- function(n){
@@ -56,4 +57,5 @@ print(t2)
 
 print(nimpar[[1]])
 nimlist <- list(nimpar)
-saveRDS(nimlist,file="./nimble_dir/results/nimPAR.RDS")
+saveRDS(nimlist,file=paste("./nimble_dir/results/pars_",targetname[3],".RDS",sep=""))
+

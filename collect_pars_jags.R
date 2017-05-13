@@ -1,6 +1,8 @@
 library(R2jags)
 library(coda)
 
+targetname <-unlist(strsplit(rtargetname,"[_]"))
+
 parlist <- c("R0","effprop","repprop","pDis","repDis","kerShape","kerPos")
 
 qtilesnames <- c("q2.5","q5","q10","q25","q50","q75","q90","q95","q97.5")
@@ -8,7 +10,7 @@ qtilesnames <- c("q2.5","q5","q10","q25","q50","q75","q90","q95","q97.5")
 qlist <- c(0.025,0.05,0.1,0.25,0.5,0.75,0.9,0.95,0.975)
 
 
-jagsfilenames <- list.files(path="./jags_dir/data/",pattern="jags.Rds")
+jagsfilenames <- list.files(path="./jags_dir/data/",pattern=targetname[3])
 
 
 getparjags <- function(n){
@@ -53,4 +55,6 @@ print(t2)
 
 print(jagspar[[1]])
 jagslist <- list(jagspar)
-saveRDS(jagslist,file="./jags_dir/results/jagsPAR.RDS")
+saveRDS(jagslist,file=paste("./jags_dir/results/pars_",targetname[3],".RDS",sep=""))
+
+# rdnosave()

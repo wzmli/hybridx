@@ -2,7 +2,7 @@
 
 current: target
 
-target pngtarget pdftarget vtarget acrtarget: fit.hyb.1.bb.nb.1.jags.Rout 
+target pngtarget pdftarget vtarget acrtarget: collect_pars_hyb.1.bb.nb_jags.Rout 
 
 ##################################################################
 
@@ -58,13 +58,22 @@ collect_results_stan.Rout: parameters.CBB.Rout collect_results_stan.R
 	$(run-R)
 
 
-collect_pars_%.Rout: parameters.CBB.Rout collect_pars_%.R
+
+collect_pars_%_jags.Rout: parameters.CBB.Rout collect_pars_jags.R
 	$(run-R)
 
-collect_pars_jags.Rout:
-collect_pars_nim.Rout:
-collect_pars_stan.Rout:
+ollect_pars_%_nim.Rout: parameters.CBB.Rout collect_pars_nim.R
+	$(run-R)
+	
+collect_pars_hyb.1.bb.nb_jags.Rout:
 
+
+collect_pars_%_nim.Rout: parameters.CBB.Rout collect_pars_nim.Rout
+	$(run-R)
+	
+	
+collect_pars_nim.Rout:
+	$(run-R)
 
 #####plots
 
