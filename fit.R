@@ -129,34 +129,29 @@ source(paste("./nimble_dir/templates/templates",type,version,process,observation
 if(plat == "jags"){
   datadir <- "./jags_dir/data/"
   modfile <- paste("./jags_dir/templates/templates",type,version,process,observation,seed,plat,sep=".")
+  while(miter < 1000000){
   system.time(jagsmod <- jags.model(data=c(nimdata,nimcon)
                         , inits=niminits
                         , file = modfile
-                        , n.adapt = 10000
+                        , n.adapt = 2000
                         , n.chains = length(niminits)
   )
   )
-  turnoff <- TRUE
-  sampling_time <- 0
   
-  while(turnoff){
   MCMCtime <- system.time(
     FitModel <- coda.samples(model = jagsmod
                             , n.iter = miter
                             , n.thin = mthin
                             , variable.names = params
-                            , n.burnin = miter
     )
   )
-  
+  miter <- miter*2
   Rhatcalc <- gelman.diag(FitModel[,c("effprop","R0","repprop")])$psrf[,1]
-  sampling_time <- sampling_time + MCMCtime
+  sampling_time <- MCMCtime
   neff <- effectiveSize(FitModel)[c("effprop","R0","repprop")]
-  turnoff <- !all(Rhatcalc<1.1,neff>400) 
+  if(all(Rhatcalc<1.1,neff>400)){miter <- 1000*1000 + 1000} 
   }
 }
-
-
 
 if(plat == "stan"){
   miter = miter*2

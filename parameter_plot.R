@@ -222,7 +222,7 @@ gg5 <- (ggplot(pardf3,aes(x=Time,y=ESS25,color=platform))
 		  + scale_y_log10()
         # + ylim(c(0,1.2))
         + facet_grid(observation~process,scales = "free_y")
-        + theme_minimal()
+        + theme_bw()
         + theme(axis.text.x = element_text(angle=0))
         # + annotate("rect",xmin=0,xmax=6,
         #            ymin=0.9-2*sqrt(0.9*0.1/100),
