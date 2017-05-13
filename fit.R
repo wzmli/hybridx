@@ -132,7 +132,7 @@ if(plat == "jags"){
   system.time(jagsmod <- jags.model(data=c(nimdata,nimcon)
                         , inits=niminits
                         , file = modfile
-                        , n.adapt = 1000
+                        , n.adapt = 10000
                         , n.chains = length(niminits)
   )
   )
