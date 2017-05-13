@@ -120,6 +120,7 @@ gg <- (ggplot(pardf3,aes(x=observation,y=BIAS,color=platform))
                             )
        )
        + ylab("BIAS")
+       + geom_hline(yintercept = 0)
        + xlab("observation process")
        + facet_grid(parameters~process)
        + theme_bw()
@@ -141,6 +142,7 @@ gg2 <- (ggplot(pardf3,aes(x=observation,y=RMSE,color=platform))
                              )
         + ylab("RMSE")
         + xlab("observation process")
+        + geom_hline(yintercept = 0)
         + facet_grid(parameters~process)
         + theme_bw()
         + theme(axis.text.x = element_text(angle=0))
@@ -205,58 +207,58 @@ print(gg4)
 
 
 
-gg5 <- (ggplot(pardf3,aes(x=Time,y=ESS25,color=platform))
-        + geom_errorbar(aes(ymin=ESSmin,ymax=ESS50))
-        + geom_point(size=3,aes(shape=type_ver))
-        + scale_shape_manual(values=c(1,2,16,17),name="Method"
-                             ,labels=c("Discrete"
-                                       # , "Dis. Decorrelation"
-                                       , "Continuous"
-                                       # , "Cont. Decorrelation"
-                             )
-        )
-        + scale_color_manual(name="Platform", values=c("black","red","blue"),
-                             labels=c("JAGS","NIMBLE","Stan"))
-        + ylab("ESS (errorbars correspond to min, 25%, 50% quantiles)")
-        + xlab("Time")
-		  + scale_y_log10()
-        # + ylim(c(0,1.2))
-        + facet_grid(observation~process,scales = "free_y")
-        + theme_bw()
-        + theme(axis.text.x = element_text(angle=0))
-        # + annotate("rect",xmin=0,xmax=6,
-        #            ymin=0.9-2*sqrt(0.9*0.1/100),
-        #            ymax=0.9+2*sqrt(0.9*0.1/100),alpha=0.2)
-
-)
-
-gg6 <- (ggplot(pardf3,aes(x=observation,y=Rhat80,color=platform))
-        + geom_errorbar(aes(ymin=Rhatmed,ymax=Rhat90))
-        + geom_point(size=3,aes(shape=type_ver))
-        + scale_shape_manual(values=c(1,2,16,17),name="Method"
-                             ,labels=c("Discrete"
-                                       # , "Dis. Decorrelation"
-                                       , "Continuous"
-                                       # , "Cont. Decorrelation"
-                             )
-        )
-        + scale_color_manual(name="Platform", values=c("black","red","blue"),
-                             labels=c("JAGS","NIMBLE","Stan"))
-        + ylab("Rhat errorbars correspond to 50%, 80%, 90% quantiles")
-        + xlab("Observation Process")
-        # + ylim(c(0,1.2))
-        + facet_grid(parameters~process,scales = "free_y")
-        + theme_bw()
-        + theme(axis.text.x = element_text(angle=0))
-        # + annotate("rect",xmin=0,xmax=6,
-        #            ymin=0.9-2*sqrt(0.9*0.1/100),
-        #            ymax=0.9+2*sqrt(0.9*0.1/100),alpha=0.2)
-
-)
-print(gg6)
-
-print(gg5 %+% (pardf3 %>% filter(parameters=="R0")) + ggtitle("R0"))
-print(gg5 %+% (pardf3 %>% filter(parameters=="effprop")) + ggtitle("Effective proportion"))
-print(gg5 %+% (pardf3 %>% filter(parameters=="repprop")) + ggtitle("Reporting proportion"))
+# gg5 <- (ggplot(pardf3,aes(x=Time,y=ESS25,color=platform))
+#         + geom_errorbar(aes(ymin=ESSmin,ymax=ESS50))
+#         + geom_point(size=3,aes(shape=type_ver))
+#         + scale_shape_manual(values=c(1,2,16,17),name="Method"
+#                              ,labels=c("Discrete"
+#                                        # , "Dis. Decorrelation"
+#                                        , "Continuous"
+#                                        # , "Cont. Decorrelation"
+#                              )
+#         )
+#         + scale_color_manual(name="Platform", values=c("black","red","blue"),
+#                              labels=c("JAGS","NIMBLE","Stan"))
+#         + ylab("ESS (errorbars correspond to min, 25%, 50% quantiles)")
+#         + xlab("Time")
+# 		  + scale_y_log10()
+#         # + ylim(c(0,1.2))
+#         + facet_grid(observation~process,scales = "free_y")
+#         + theme_bw()
+#         + theme(axis.text.x = element_text(angle=0))
+#         # + annotate("rect",xmin=0,xmax=6,
+#         #            ymin=0.9-2*sqrt(0.9*0.1/100),
+#         #            ymax=0.9+2*sqrt(0.9*0.1/100),alpha=0.2)
+# 
+# )
+# 
+# gg6 <- (ggplot(pardf3,aes(x=observation,y=Rhat80,color=platform))
+#         + geom_errorbar(aes(ymin=Rhatmed,ymax=Rhat90))
+#         + geom_point(size=3,aes(shape=type_ver))
+#         + scale_shape_manual(values=c(1,2,16,17),name="Method"
+#                              ,labels=c("Discrete"
+#                                        # , "Dis. Decorrelation"
+#                                        , "Continuous"
+#                                        # , "Cont. Decorrelation"
+#                              )
+#         )
+#         + scale_color_manual(name="Platform", values=c("black","red","blue"),
+#                              labels=c("JAGS","NIMBLE","Stan"))
+#         + ylab("Rhat errorbars correspond to 50%, 80%, 90% quantiles")
+#         + xlab("Observation Process")
+#         # + ylim(c(0,1.2))
+#         + facet_grid(parameters~process,scales = "free_y")
+#         + theme_bw()
+#         + theme(axis.text.x = element_text(angle=0))
+#         # + annotate("rect",xmin=0,xmax=6,
+#         #            ymin=0.9-2*sqrt(0.9*0.1/100),
+#         #            ymax=0.9+2*sqrt(0.9*0.1/100),alpha=0.2)
+# 
+# )
+# print(gg6)
+# 
+# print(gg5 %+% (pardf3 %>% filter(parameters=="R0")) + ggtitle("R0"))
+# print(gg5 %+% (pardf3 %>% filter(parameters=="effprop")) + ggtitle("Effective proportion"))
+# print(gg5 %+% (pardf3 %>% filter(parameters=="repprop")) + ggtitle("Reporting proportion"))
 
 
