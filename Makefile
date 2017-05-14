@@ -73,7 +73,7 @@ collect_pars_hyb.1.bb.nb_jags.Rout:
 #####plots
 
 
-parameter_plot.Rout: ./jags_dir/results/jagsPAR.RDS ./nimble_dir/results/nimPAR.RDS ./stan_dir/results/stanPAR.RDS name.R parameter_plot.R
+parameter_plot.Rout: ./jags_dir/results/pars_dis.1.bb.bb.RDS ./nimble_dir/results/pars_dis.1.bb.bb.RDS ./stan_dir/results/stanPAR.RDS name.R parameter_plot.R
 	$(run-R)
 
 

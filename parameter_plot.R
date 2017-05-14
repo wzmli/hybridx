@@ -173,8 +173,8 @@ gg3 <- (ggplot(pardf3,aes(x=observation,y=cov90,color=platform))
         + scale_color_manual(name="Platform", values=c("black","red","blue"),
                              labels=c("JAGS","NIMBLE","Stan"))
         + annotate("rect",xmin=0,xmax=6,
-                   ymin=0.9-2*sqrt(0.9*0.1/100),
-                   ymax=0.9+2*sqrt(0.9*0.1/100),alpha=0.2)
+                   ymin=0.9-2*sqrt(0.9*0.1/200),
+                   ymax=0.9+2*sqrt(0.9*0.1/200),alpha=0.2)
 
 )
 print(gg3)
