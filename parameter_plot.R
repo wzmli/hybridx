@@ -42,7 +42,7 @@ qfun <- function(x){
 plat1 <- readRDS(input_files[1])
 plat2 <- readRDS(input_files[2])
 plat3 <- readRDS(input_files[3])
-parlist <- c(plat1[[1]],plat2[[1]],plat3[[1]])
+parlist <- c(plat1,plat2[[1]],plat3)
 
 # aa <- readRDS("temp.RDS")
 # parlist <- aa[[1]]

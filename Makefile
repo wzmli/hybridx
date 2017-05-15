@@ -2,7 +2,7 @@
 
 current: target
 
-target pngtarget pdftarget vtarget acrtarget: collect_pars_hyb.1.bb.nb_jags.Rout 
+target pngtarget pdftarget vtarget acrtarget: parameter_plot.Rout 
 
 ##################################################################
 
@@ -70,15 +70,10 @@ collect_pars_%_stan.Rout: parameters.CBB.Rout collect_pars_stan.R
 collect_pars_hyb.1.bb.nb_jags.Rout:
 
 
-pool_%.Rout: pool.R
-	$(run-R)
-
-pool_pars_stan.Rout:
-
 #####plots
 
 
-parameter_plot.Rout: ./jags_dir/results/pars_dis.1.bb.bb.RDS ./nimble_dir/results/pars_dis.1.bb.bb.RDS ./stan_dir/results/stanPAR.RDS name.R parameter_plot.R
+parameter_plot.Rout: ./jags_dir/results/parsjags.RDS ./nimble_dir/results/pars_dis.1.bb.bb.RDS ./stan_dir/results/parsstan.RDS name.R parameter_plot.R
 	$(run-R)
 
 
