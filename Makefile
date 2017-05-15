@@ -70,6 +70,11 @@ collect_pars_%_stan.Rout: parameters.CBB.Rout collect_pars_stan.R
 collect_pars_hyb.1.bb.nb_jags.Rout:
 
 
+pool_%.Rout: pool.R
+	$(run-R)
+
+pool_pars_stan.Rout:
+
 #####plots
 
 
