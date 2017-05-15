@@ -183,7 +183,7 @@ mcmc_results <- list(FitModel,sampling_time,sim)
 
 print(summary(FitModel))
 print(Rhatcalc)
-if(all(Rhatcalc<1.1,neff>400)){
+if(all(Rhatcalc<1.1,neff>400, sum(sim$Iobs[(lag+1):(lag+numobs)])>10)){
 saveRDS(mcmc_results,file=paste(datadir,paste(type,version,process,observation,seed,plat,"Rds",sep="."),sep=""))
 }
 # rdnosave()
