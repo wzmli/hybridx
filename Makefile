@@ -84,7 +84,7 @@ cleanall:
 	rm -f *.nimble.R *.buggen *.wrapR.r *.Rout *.nimcode *.stan *.init.R *.data.R *.Rlog *.wrapR.rout .sim* .template* .fit* *.jags *.nim jags_dir/data/*.Rds jags_dir/templates/templates* nimble_dir/templates/*.nimcode nimble_dir/data/*.Rds stan_dir/templates/*.stan stan_dir/data/*.Rds
 
 clean: 
-	rm -f *.wrapR.r *.Rout *.Rlog *.wrapR.rout
+	rm -f *.wrapR.r *.Rout *.Rlog *.wrapR.rout .sim.* .templates.* .fit.*
 
 new: clean
 	rm -f *.Rds
