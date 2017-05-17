@@ -42,7 +42,7 @@ qfun <- function(x){
 plat1 <- readRDS(input_files[1])
 plat2 <- readRDS(input_files[2])
 plat3 <- readRDS(input_files[3])
-parlist <- c(plat1,plat2[[1]],plat3)
+parlist <- c(plat1,plat2,plat3)
 
 # aa <- readRDS("temp.RDS")
 # parlist <- aa[[1]]
@@ -114,9 +114,9 @@ gg <- (ggplot(pardf3,aes(x=observation,y=BIAS,color=platform))
        + geom_point(size=3,aes(shape=type_ver))
        + scale_shape_manual(values=c(1,2,16,17),name="Method"
                             ,labels=c("Discrete"
-                                      # , "Dis. Decorrelation"
+                                      , "Dis. Decorrelation"
                                       , "Continuous"
-                                      # , "Cont. Decorrelation"
+                                      , "Cont. Decorrelation"
                             )
        )
        + ylab("BIAS")
@@ -135,9 +135,9 @@ gg2 <- (ggplot(pardf3,aes(x=observation,y=RMSE,color=platform))
         + geom_point(size=3,aes(shape=type_ver))
         + scale_shape_manual(values=c(1,2,16,17),name="Method"
                              ,labels=c("Discrete"
-                                       # , "Dis. Decorrelation"
+                                       , "Dis. Decorrelation"
                                        , "Continuous"
-                                       # , "Cont. Decorrelation"
+                                       , "Cont. Decorrelation"
                                        )
                              )
         + ylab("RMSE")
@@ -158,9 +158,9 @@ gg3 <- (ggplot(pardf3,aes(x=observation,y=cov90,color=platform))
         + geom_point(size=3,aes(shape=type_ver))
         + scale_shape_manual(values=c(1,2,16,17),name="Method"
                              ,labels=c("Discrete"
-                                       # , "Dis. Decorrelation"
+                                       , "Dis. Decorrelation"
                                        , "Continuous"
-                                       # , "Cont. Decorrelation"
+                                       , "Cont. Decorrelation"
                              )
         )
         + ylab("Coverage")
@@ -173,8 +173,8 @@ gg3 <- (ggplot(pardf3,aes(x=observation,y=cov90,color=platform))
         + scale_color_manual(name="Platform", values=c("black","red","blue"),
                              labels=c("JAGS","NIMBLE","Stan"))
         + annotate("rect",xmin=0,xmax=6,
-                   ymin=0.9-2*sqrt(0.9*0.1/200),
-                   ymax=0.9+2*sqrt(0.9*0.1/200),alpha=0.2)
+                   ymin=0.9-2*sqrt(0.9*0.1/100),
+                   ymax=0.9+2*sqrt(0.9*0.1/100),alpha=0.2)
 
 )
 print(gg3)

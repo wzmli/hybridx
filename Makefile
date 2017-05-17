@@ -76,7 +76,7 @@ pool_%.Rout: pool.R
 #####plots
 
 
-parameter_plot.Rout: ./jags_dir/results/parsjags.RDS ./nimble_dir/results/pars_dis.1.bb.bb.RDS ./stan_dir/results/parsstan.RDS name.R parameter_plot.R
+parameter_plot.Rout: ./jags_dir/results/parsjags.RDS ./nimble_dir/results/parsnim.RDS ./stan_dir/results/parsstan.RDS name.R parameter_plot.R
 	$(run-R)
 
 
