@@ -2,7 +2,9 @@
 library(dplyr)
 library(coda)
 
-fctype <- unlist(strsplit(rtargetname,"[.]"))
+targetname <- unlist(strsplit(rtargetname,"[_]"))
+
+fctype <- unlist(strsplit(targetname[2],"[.]"))
 
 #### helper functions ----
 qtilesnames <- c("q2.5","q5","q10","q25","q50","q75","q90","q95","q97.5")
@@ -88,18 +90,19 @@ qt <- function(n){
 
 #### forecast ----
 
-jagsfilenames <- list.files(path="./jags10k/"
-                           ,pattern=paste(fctype[3],"."
+jagsfilenames <- list.files(path="./jags_dir/data/"
+                           ,pattern=paste(fctype[1],"."
+                                          ,fctype[2],"."
+                                          ,fctype[3],"."
                                           ,fctype[4],"."
-                                          ,fctype[5],"."
-                                          ,fctype[6],"."
                                           ,".",sep=""))
 
 forecast <- function(n){
-  jagsobj <- readRDS(paste("./jags10k/",n,sep=""))
+  jagsobj <- readRDS(paste("./jags_dir/data/",n,sep=""))
   
   name <- unlist(strsplit(n,"[.]"))
   jagsmod <- jagsobj[[1]]
+  rownums <- nrow(jagsmod[[1]])
   timeobj <- jagsobj[[2]]
   dat <- jagsobj[[3]]
   real <- dat$Iobs[16:20]
@@ -110,7 +113,7 @@ forecast <- function(n){
                      , process=name[3]
                      , observation=name[4]
                      , seed = name[5]
-                     , platform = name[7]
+                     , platform = name[6]
                      , time = time,
                      tempdf)
   type <- name[1]
@@ -202,7 +205,7 @@ forecast <- function(n){
   }
   
   fcdf2[is.na(fcdf2)] <- 0
-  fclist <- fcdf2 %>% ungroup() %>% mutate(splitcode=rep(1:4,each=1000))
+  fclist <- fcdf2 %>% ungroup() %>% mutate(splitcode=rep(1:4,each=rownums))
   slist <- split(fclist,f=fclist$splitcode)
   mclist <- lapply(slist,as.mcmc)
   neff <- effectiveSize(mclist)
@@ -216,7 +219,7 @@ forecast <- function(n){
                       , seed = name[5]
                       , parameters = 11:15
                       , real = real
-                      , platform = name[7]
+                      , platform = name[6]
                       , ESS = neff[1:5]
                       , time = time,
                       forecastmat)
@@ -228,8 +231,5 @@ t1 <- system.time(jagsforecast <- lapply(jagsfilenames,forecast))
 print(t1)
 print(jagsforecast[[1]])
 
-saveRDS(jagsforecast,file=paste(fctype[2], fctype[3]
-                               ,fctype[4]
-                               ,fctype[5]
-                               ,fctype[6]
-                               ,"fc.rds",sep="_"))
+saveRDS(jagsforecast,file=paste("./jags_dir/results/fc_",targetname[2]
+                               ,".RDS",sep=""))

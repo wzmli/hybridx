@@ -2,7 +2,7 @@
 
 current: target
 
-target pngtarget pdftarget vtarget acrtarget: parameter_plot.Rout 
+target pngtarget pdftarget vtarget acrtarget: forecast_hyb.1.bb.nb.1.jags_jags.Rout 
 
 ##################################################################
 
@@ -69,6 +69,15 @@ collect_pars_%_stan.Rout: parameters.CBB.Rout collect_pars_stan.R
 	$(run-R)
 collect_pars_hyb.1.bb.nb_jags.Rout:
 
+
+## Forecast
+
+forecast_%_jags.Rout: parameters.CBB.Rout simfuns.R forecast_jags.R
+	$(run-R)
+
+forecast_hyb.1.bb.nb.1.jags_jags.Rout:
+
+### Pool results
 
 pool_%.Rout: pool.R
 	$(run-R)
