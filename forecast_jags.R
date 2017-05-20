@@ -4,6 +4,7 @@ library(coda)
 
 targetname <- unlist(strsplit(rtargetname,"[_]"))
 
+
 fctype <- unlist(strsplit(targetname[2],"[.]"))
 
 #### helper functions ----
@@ -96,6 +97,15 @@ jagsfilenames <- list.files(path="./jags_dir/data/"
                                           ,fctype[3],"."
                                           ,fctype[4],"."
                                           ,".",sep=""))
+
+if(targetname[3] == 1){
+	jagsfilenames <- jagsfilenames[1:50]	
+}
+
+if(targetname[3] == 2){
+	jagsfilenames <- jagsfilenames[51:100]
+}
+
 
 forecast <- function(n){
   jagsobj <- readRDS(paste("./jags_dir/data/",n,sep=""))

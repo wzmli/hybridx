@@ -72,8 +72,13 @@ collect_pars_hyb.1.bb.nb_jags.Rout:
 
 ## Forecast
 
-forecast_%_jags.Rout: parameters.CBB.Rout simfuns.R forecast_jags.R
+forecast_%_1_jags.Rout: parameters.CBB.Rout simfuns.R forecast_jags.R
 	$(run-R)
+
+forecast_%_2_jags.Rout: parameters.CBB.Rout simfuns.R forecast_jags.R
+	$(run-R)
+
+
 
 forecast_hyb.1.bb.nb.1.jags_jags.Rout:
 
