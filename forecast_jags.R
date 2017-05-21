@@ -99,7 +99,7 @@ jagsfilenames <- list.files(path="./jags_dir/data/"
                                           ,".",sep=""))
 
 if(targetname[3] == 1){
-	jagsfilenames <- jagsfilenames[1:50]	
+	jagsfilenames <- jagsfilenames[1:5]	
 }
 
 if(targetname[3] == 2){
