@@ -4,7 +4,7 @@ library(coda)
 
 targetname <- unlist(strsplit(rtargetname,"[_]"))
 
-fctype <- unlist(strsplit(rtargetname[2],"[.]"))
+fctype <- unlist(strsplit(targetname[2],"[.]"))
 
 #### helper functions ----
 qtilesnames <- c("q2.5","q5","q10","q25","q50","q75","q90","q95","q97.5")
