@@ -99,13 +99,20 @@ jagsfilenames <- list.files(path="./jags_dir/data/"
                                           ,".",sep=""))
 
 if(targetname[3] == 1){
-	jagsfilenames <- jagsfilenames[1:5]	
+	jagsfilenames <- jagsfilenames[1:25]	
 }
 
 if(targetname[3] == 2){
-	jagsfilenames <- jagsfilenames[51:100]
+	jagsfilenames <- jagsfilenames[26:50]
 }
 
+if(targetname[3] == 3){
+	jagsfilenames <- jagsfilenames[51:75]
+}
+
+if(targetname[3] == 4){
+	jagsfilenames <- jagsfilenames[76:100]
+}
 
 forecast <- function(n){
   jagsobj <- readRDS(paste("./jags_dir/data/",n,sep=""))
@@ -242,4 +249,4 @@ print(t1)
 print(jagsforecast[[1]])
 
 saveRDS(jagsforecast,file=paste("./jags_dir/results/fc_",targetname[2]
-                               ,".RDS",sep=""))
+                               ,"_",targetname[3],".RDS",sep=""))
