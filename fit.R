@@ -154,7 +154,6 @@ if(plat == "jags"){
 }
 
 if(plat == "stan"){
-  miter = miter*2
   datadir <- "./stan_dir/data/"
   modfile <- paste("./stan_dir/templates/templates",type,version,process,observation,seed,plat,sep=".")
   buildstan <- stan_model(file=modfile
@@ -164,7 +163,7 @@ if(plat == "stan"){
 #                    , iter=miter
 #                    , chains=length(niminits)
   )
-  while(miter < 10000){
+  while(miter < 1000000){
   FitModel <- sampling(buildstan,data=c(nimdata,nimcon),init=niminits,pars=params,chains=length(niminits))
   MCMCtime <- get_elapsed_time(FitModel)
   sampling_time <- sum(MCMCtime[,2])
@@ -173,7 +172,7 @@ if(plat == "stan"){
   neff <- effectiveSize(FitModel)[c("effprop","R0","repprop")]
   miter <- miter*2
   if(all(Rhatcalc<1.1,neff>400)){
-    miter <- 11000
+    miter <- 1000*1000 + 1000
   }
   }
 }
