@@ -95,7 +95,7 @@ stanfilenames <- list.files(path="./stan_dir/data/"
                                            ,fctype[2],"."
                                            ,fctype[3],"."
                                            ,fctype[4],"."
-                                           ,".",sep=""))
+                                           ,sep=""))
 
 if(targetname[3] == 1){
 	stanfilenames <- stanfilenames[1:50]
