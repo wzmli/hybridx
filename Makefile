@@ -75,6 +75,13 @@ collect_pars_hyb.1.bb.nb_jags.Rout:
 forecast_%_jags.Rout: parameters.CBB.Rout simfuns.R forecast_jags.R
 	$(run-R)
 
+forecast_%_1_jags.Rout: parameters.CBB.Rout simfuns.R forecast_jags.R
+	$(run-R)
+
+forecast_%_1_jags.Rout: parameters.CBB.Rout simfuns.R forecast_jags.R
+	$(run-R)
+
+
 ### Pool results
 
 pool_%.Rout: pool.R

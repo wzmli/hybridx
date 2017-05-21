@@ -89,6 +89,7 @@ qt <- function(n){
   return(quantile(n,qlist,na.rm=TRUE))
 }
 
+
 #### forecast ----
 
 jagsfilenames <- list.files(path="./jags_dir/data/"
@@ -99,6 +100,15 @@ jagsfilenames <- list.files(path="./jags_dir/data/"
                                           ,".",sep=""))
 
 
+
+if(targetname[3] == 1){
+  jagsfilenames <- jagsfilenames[1:50] 
+}
+
+
+if(targetname[3] == 2){
+  jagsfilenames <- jagsfilenames[51:100] 
+}
 
 forecast <- function(n){
   jagsobj <- readRDS(paste("./jags_dir/data/",n,sep=""))
@@ -111,6 +121,7 @@ forecast <- function(n){
   real <- dat$Iobs[16:20]
   time <- timeobj[1]
   tempdf <- do.call(rbind,jagsmod)
+  
   fcdf <- data.frame(type = name[1]
                      , version=name[2]
                      , process=name[3]
@@ -119,6 +130,8 @@ forecast <- function(n){
                      , platform = name[6]
                      , time = time,
                      tempdf)
+  
+  fcdf <- fcdf %>% sample_n(8000)
   type <- name[1]
   if(type=="hyb"){
     fcdf2 <- (fcdf 
@@ -208,7 +221,7 @@ forecast <- function(n){
   }
   
   fcdf2[is.na(fcdf2)] <- 0
-  fclist <- fcdf2 %>% ungroup() %>% mutate(splitcode=rep(1:4,each=rownums))
+  fclist <- fcdf2 %>% ungroup() %>% mutate(splitcode=rep(1:4,each=2000))
   slist <- split(fclist,f=fclist$splitcode)
   mclist <- lapply(slist,as.mcmc)
   neff <- effectiveSize(mclist)
@@ -227,12 +240,13 @@ forecast <- function(n){
                       , time = time,
                       forecastmat)
   rownames(fcdf3) <- NULL
-  
-  saveRDS(fcdf3,file=paste("./jags_dir/results/fc_",n,sep=""))
+  return(fcdf3)
 }
 
-for(i in jagsfilenames){
-  forecast(i)
-}
+t1 <- system.time(jagsforecast <- lapply(jagsfilenames,forecast))
+print(t1)
+print(jagsforecast[[1]])
 
+saveRDS(jagsforecast,file=paste("./jags_dir/results/fc_",targetname[2],
+                                "_",targetname[3],".RDS",sep=""))
 # rdnosave()
