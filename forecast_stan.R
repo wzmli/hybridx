@@ -2,7 +2,9 @@
 library(dplyr)
 library(coda)
 
-fctype <- unlist(strsplit(rtargetname,"[.]"))
+targetname <- unlist(strsplit(rtargetname,"[_]"))
+
+fctype <- unlist(strsplit(rtargetname[2],"[.]"))
 
 #### helper functions ----
 qtilesnames <- c("q2.5","q5","q10","q25","q50","q75","q90","q95","q97.5")
@@ -89,11 +91,20 @@ qt <- function(n){
 #### forecast ----
 
 stanfilenames <- list.files(path="./stan_dir/data/"
-                            ,pattern=paste(fctype[3],"."
+                            ,pattern=paste(fctype[1],"."
+                                           ,fctype[2],"."
+                                           ,fctype[3],"."
                                            ,fctype[4],"."
-                                           ,fctype[5],"."
-                                           ,fctype[6],"."
                                            ,".",sep=""))
+
+if(targetname[3] == 1){
+	stanfilenames <- stanfilenames[1:50]
+}
+
+if(targetname[3] == 2){
+	stanfilenames <- stanfilenames[51:100]
+}
+
 
 forecast <- function(n){
   stanobj <- readRDS(paste("./stan_dir/data/",n,sep=""))
@@ -113,6 +124,7 @@ forecast <- function(n){
                      , platform = name[7]
                      , time = time,
                      tempdf)
+  fcdf <- fcdf %>% sample_n(8000)
   type <- name[1]
   if(type=="hyb"){
     fcdf2 <- (fcdf 
@@ -202,7 +214,7 @@ forecast <- function(n){
   }
   
   fcdf2[is.na(fcdf2)] <- 0
-  fclist <- fcdf2 %>% ungroup() %>% mutate(splitcode=rep(1:4,each=5000))
+  fclist <- fcdf2 %>% ungroup() %>% mutate(splitcode=rep(1:4,each=2000))
   slist <- split(fclist,f=fclist$splitcode)
   mclist <- lapply(slist,as.mcmc)
   neff <- effectiveSize(mclist)
@@ -228,12 +240,6 @@ t1 <- system.time(stanforecast <- lapply(stanfilenames,forecast))
 print(t1)
 print(stanforecast[[1]])
 
-saveRDS(stanforecast,file=paste("./stan_dir/results/",
-	paste(fctype[2]
-		, fctype[3]
-		, fctype[4]
-		, fctype[5]
-		, fctype[6]
-      , "fc.rds",sep=".")
-	, sep="")
-	)
+saveRDS(stanforecast,file=paste("./stan_dir/results/fc_",targetname[2],"_",targetname[3], ".RDS", sep=""))
+
+# rdnosave()
