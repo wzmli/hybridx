@@ -2,7 +2,9 @@
 library(dplyr)
 library(coda)
 
-fctype <- unlist(strsplit(rtargetname,"[.]"))
+targetname <- unlist(strsplite(rtargetname[2],"[_]"))
+
+fctype <- unlist(strsplit(targetname[2],"[.]"))
 
 #### helper functions ----
 qtilesnames <- c("q2.5","q5","q10","q25","q50","q75","q90","q95","q97.5")
@@ -88,15 +90,24 @@ qt <- function(n){
 
 #### forecast ----
 
-nimfilenames <- list.files(path="./nim10k/"
-                            ,pattern=paste(fctype[3],"."
+nimfilenames <- list.files(path="./nimble_dir/data/"
+                            ,pattern=paste(fctype[1],"."
+                                           ,fctype[2],"."
+                                           ,fctype[3],"."
                                            ,fctype[4],"."
-                                           ,fctype[5],"."
-                                           ,fctype[6],"."
                                            ,".",sep=""))
 
+if(targetname[3] == 1){
+	nimfilenames <- nimfilenames[1:50]
+}
+
+if(targetname[3] == 2){
+	nimfilenames <- nimfilenames[51:100]
+}
+
+
 forecast <- function(n){
-  nimobj <- readRDS(paste("./nim10k/",n,sep=""))
+  nimobj <- readRDS(paste("./nimble_dir/data/",n,sep=""))
   
   name <- unlist(strsplit(n,"[.]"))
   nimmod <- nimobj[[1]]
@@ -113,6 +124,7 @@ forecast <- function(n){
                      , platform = name[7]
                      , time = time,
                      tempdf)
+  fcdf <- fcdf %>% sample_n(8000)
   type <- name[1]
   if(type=="hyb"){
     fcdf2 <- (fcdf 
@@ -228,8 +240,6 @@ t1 <- system.time(nimforecast <- lapply(nimfilenames,forecast))
 print(t1)
 print(nimforecast[[1]])
 
-saveRDS(nimforecast,file=paste(fctype[2], fctype[3]
-                                ,fctype[4]
-                                ,fctype[5]
-                                ,fctype[6]
-                                ,"fc.rds",sep="_"))
+saveRDS(nimforecast,file=paste("./nimble_dir/results/fc_",targetname[2], "_",targetname[3],".RDS",sep=""))
+
+# rdnosave()
