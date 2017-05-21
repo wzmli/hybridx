@@ -2,7 +2,7 @@
 library(dplyr)
 library(coda)
 
-targetname <- unlist(strsplite(rtargetname[2],"[_]"))
+targetname <- unlist(strsplit(rtargetname,"[_]"))
 
 fctype <- unlist(strsplit(targetname[2],"[.]"))
 
@@ -214,7 +214,7 @@ forecast <- function(n){
   }
   
   fcdf2[is.na(fcdf2)] <- 0
-  fclist <- fcdf2 %>% ungroup() %>% mutate(splitcode=rep(1:4,each=10000))
+  fclist <- fcdf2 %>% ungroup() %>% mutate(splitcode=rep(1:4,each=2000))
   slist <- split(fclist,f=fclist$splitcode)
   mclist <- lapply(slist,as.mcmc)
   neff <- effectiveSize(mclist)
