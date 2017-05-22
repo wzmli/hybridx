@@ -81,6 +81,10 @@ forecast_%_nim.Rout: parameters.CBB.Rout simfuns.R forecast_nim.R
 forecast_%_stan.Rout: parameters.CBB.Rout simfuns.R forecast_stan.R
 	$(run-R)
 
+## Mean Generation Intervals
+
+gen_%_jags.Rout: parameters.CBB.Rout simfuns.R gen_jags.R
+	$(run-R)
 
 
 
