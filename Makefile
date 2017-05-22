@@ -86,7 +86,8 @@ forecast_%_stan.Rout: parameters.CBB.Rout simfuns.R forecast_stan.R
 gen_%_jags.Rout: parameters.CBB.Rout simfuns.R gen_jags.R
 	$(run-R)
 
-
+gen_%_nim.Rout: parameters.CBB.Rout simfuns.R gen_nim.R
+	$(run-R)
 
 ### Pool results
 
