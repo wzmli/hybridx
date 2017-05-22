@@ -160,11 +160,10 @@ if(plat == "stan"){
 #                    , data=c(nimdata,nimcon)
 #                    , init=niminits
 #                    , pars=params
-#                    , iter=miter
 #                    , chains=length(niminits)
   )
   while(miter < 1000000){
-  FitModel <- sampling(buildstan,data=c(nimdata,nimcon),init=niminits,pars=params,chains=length(niminits))
+  FitModel <- sampling(buildstan,data=c(nimdata,nimcon),init=niminits,pars=params,chains=length(niminits),iter=miter)
   MCMCtime <- get_elapsed_time(FitModel)
   sampling_time <- sum(MCMCtime[,2])
   FitModel <- As.mcmc.list(FitModel)
