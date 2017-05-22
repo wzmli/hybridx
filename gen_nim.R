@@ -86,4 +86,4 @@ t1 <- system.time(nimgen <- lapply(nimfilenames,geni))
 print(t1)
 print(nimgen[[1]])
 
-saveRDS(nimgen,file=paste("./nimble_dir/data/results/gen_",targetname[2],"_",targetname[3],".RDS",sep=""))
+saveRDS(nimgen,file=paste("./nimble_dir/results/gen_",targetname[2],"_",targetname[3],".RDS",sep=""))
