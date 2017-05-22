@@ -89,6 +89,9 @@ gen_%_jags.Rout: parameters.CBB.Rout simfuns.R gen_jags.R
 gen_%_nim.Rout: parameters.CBB.Rout simfuns.R gen_nim.R
 	$(run-R)
 
+gen_%_stan.Rout: parameters.CBB.Rout simfuns.R gen_nim.R
+	$(run-R)
+
 ### Pool results
 
 pool_%.Rout: pool.R

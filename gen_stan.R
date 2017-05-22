@@ -2,7 +2,9 @@
 library(dplyr)
 library(coda)
 
-mgitype <- unlist(strsplit(rtargetname,"[.]"))
+targetname <- unlist(strsplit(rtargetname,"[_]"))
+
+mgitype <- unlist(strsplit(targetname[2],"[.]"))
 
 #### helper functions ----
 qtilesnames <- c("q2.5","q5","q10","q25","q50","q75","q90","q95","q97.5")
@@ -26,11 +28,19 @@ mgi <- function(gs,gp,l=5){
 #### mean generation interval ----
 
 stanfilenames <- list.files(path="./stan_dir/data/"
-                            ,pattern=paste(mgitype[3],"."
+                            ,pattern=paste(mgitype[1],"."
+                                           ,mgitype[2],"."
+                                           ,mgitype[3],"."
                                            ,mgitype[4],"."
-                                           ,mgitype[5],"."
-                                           ,mgitype[6],"."
                                            ,".",sep=""))
+
+if(targetname[3] == 1){
+	stanfilenames <- stanfilenames[1:50]
+}
+
+if(targetname[3] == 2){
+	stanfilenames <- stanfilenames[51:100]
+}
 
 geni <- function(n){
   stanobj <- readRDS(paste("./stan_dir/data/",n,sep=""))
@@ -44,11 +54,12 @@ geni <- function(n){
   gendf <- do.call(rbind,stanmod)
   gendf2 <- (data.frame(gendf) 
               %>% select(c(kerShape,kerPos))
+				  %>% sample_n(8000)
               %>% rowwise()
               %>% transmute(gen=mgi(kerShape,kerPos))
   )
   gendf2[is.na(gendf2)] <- 0
-  genlist <- gendf2 %>% ungroup() %>% mutate(splitcode=rep(1:4,each=500))
+  genlist <- gendf2 %>% ungroup() %>% mutate(splitcode=rep(1:4,each=2000))
   slist <- split(genlist,f=genlist$splitcode)
   mclist <- lapply(slist,as.mcmc)
   neff <- effectiveSize(mclist)
@@ -62,7 +73,7 @@ geni <- function(n){
                       , seed = name[5]
                       , parameters = "MGI"
                       , real = real
-                      , platform = name[7]
+                      , platform = name[6]
                       , ESS = neff[1]
                       , time = time,
                       genmat)
@@ -74,12 +85,4 @@ t1 <- system.time(stangen <- lapply(stanfilenames,geni))
 print(t1)
 print(stangen[[1]])
 
-saveRDS(stangen,file=paste("./stan_dir/results/"
-	paste(mgitype[2]
-		, mgitype[3]
-      , mgitype[4]
-      , mgitype[5]
-      , mgitype[6]
-      , "gen.rds",sep=".")
-	, sep="" )
-)
+saveRDS(stangen,file=paste("./stan_dir/results/gen_",targetname[2],"_",targetname[3],".RDS",sep=""))
