@@ -12,5 +12,9 @@
 *.Rds
 
 jags_dir/results/pars_*.RDS
+jags_dir/results/fc_*.RDS
 nimble_dir/results/pars_*.RDS
+nimble_dir/results/fc_*.RDS
 stan_dir/results/pars_*.RDS
+stan_dir/results/fc_*.RDS
+
