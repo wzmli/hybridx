@@ -228,7 +228,7 @@ forecast <- function(n){
                       , seed = name[5]
                       , parameters = 11:15
                       , real = real
-                      , platform = name[7]
+                      , platform = name[6]
                       , ESS = neff[1:5]
                       , time = time,
                       forecastmat)
