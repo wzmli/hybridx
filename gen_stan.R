@@ -46,7 +46,10 @@ geni <- function(n){
   stanobj <- readRDS(paste("./stan_dir/data/",n,sep=""))
   
   name <- unlist(strsplit(n,"[.]"))
-  stanmod <- stanobj[[1]]
+  stanmodraw <- stanobj[[1]]
+  ndim <- nrow(stanmodraw[[1]])
+  stanthin <- lapply(stanmodraw,function(x){mcmc(x,start=1,end=ndim,thin=(ndim/2000))})
+  stanmod <- as.mcmc.list(stanthin)
   timeobj <- stanobj[[2]]
   dat <- stanobj[[3]]
   real <- mgi(gs=dat$kerShape,gp=dat$kerPos,l=5)
@@ -54,7 +57,6 @@ geni <- function(n){
   gendf <- do.call(rbind,stanmod)
   gendf2 <- (data.frame(gendf) 
               %>% select(c(kerShape,kerPos))
-				  %>% sample_n(8000)
               %>% rowwise()
               %>% transmute(gen=mgi(kerShape,kerPos))
   )

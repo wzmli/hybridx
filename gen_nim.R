@@ -47,7 +47,10 @@ geni <- function(n){
   nimobj <- readRDS(paste("./nimble_dir/data/",n,sep=""))
   
   name <- unlist(strsplit(n,"[.]"))
-  nimmod <- nimobj[[1]]
+  nimmodraw <- nimobj[[1]]
+  ndim <- nrow(nimmodraw[[1]])
+  nimthin <- lapply(nimmodraw,function(x){mcmc(x,start=1,end=ndim,thin=(ndim/2000))})
+  nimmod <- as.mcmc.list(nimthin)
   timeobj <- nimobj[[2]]
   dat <- nimobj[[3]]
   real <- mgi(gs=dat$kerShape,gp=dat$kerPos,l=5)
@@ -55,7 +58,6 @@ geni <- function(n){
   gendf <- do.call(rbind,nimmod)
   gendf2 <- (data.frame(gendf) 
              %>% select(c(kerShape,kerPos))
-				 %>% sample_n(8000)
              %>% rowwise()
              %>% transmute(gen=mgi(kerShape,kerPos))
   )

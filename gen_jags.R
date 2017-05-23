@@ -44,7 +44,10 @@ geni <- function(n){
   jagsobj <- readRDS(paste("./jags_dir/data/",n,sep=""))
   
   name <- unlist(strsplit(n,"[.]"))
-  jagsmod <- jagsobj[[1]]
+  jagsmodraw <- jagsobj[[1]]
+  ndim <- nrow(jagsmodraw[[1]])
+  jagsthin <- lapply(jagsmodraw,function(x){mcmc(x,start=1,end=ndim,thin=(ndim/2000))})
+  jagsmod <- as.mcmc.list(jagsthin)
   timeobj <- jagsobj[[2]]
   dat <- jagsobj[[3]]
   real <- mgi(gs=dat$kerShape,gp=dat$kerPos,l=5)
@@ -53,7 +56,6 @@ geni <- function(n){
 
   gendf2 <- (data.frame(gendf) 
              %>% select(c(kerShape,kerPos))
-				 %>% sample_n(8000)
              %>% rowwise()
              %>% transmute(gen=mgi(kerShape,kerPos))
   )
