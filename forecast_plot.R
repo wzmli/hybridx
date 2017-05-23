@@ -45,13 +45,11 @@ nimdf <- data.frame()
 for(i in 1:length(plat2)){
   nimdf <- rbind(nimdf,plat2[[i]])
 }
-nimdf <- nimdf %>% mutate(platform = "nimble")
 
 standf <- data.frame()
 for(i in 1:length(plat3)){
   standf <- rbind(standf,plat3[[i]])
 }
-standf <- standf %>% mutate(platform = "stan") 
 
 # fclist <- c(plat1,plat2,plat3)
 
