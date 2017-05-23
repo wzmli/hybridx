@@ -49,7 +49,7 @@ parlist <- c(plat1,plat2,plat3)
 pardf <- (parlist
           %>% bind_rows(.id="run")
           %>% mutate(timeperESS=time/ESS)
-          %>% filter(parameters %in% c("R0","effprop","repprop"))
+          # %>% filter(parameters %in% c("R0","effprop","repprop"))
           %>% group_by(run,type,version,process,observation,platform,parameters) 
           %>% do(qfun(.))
           %>% ungroup() 

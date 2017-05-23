@@ -2,7 +2,7 @@
 
 current: target
 
-target pngtarget pdftarget vtarget acrtarget: forecast_hyb.1.bb.nb.1.jags_jags.Rout 
+target pngtarget pdftarget vtarget acrtarget: forecast_plot.Rout 
 
 ##################################################################
 
@@ -98,6 +98,12 @@ pool_%.Rout: pool.R
 	$(run-R)
 
 #####plots
+
+forecast_plot.Rout: ./jags_dir/results/fcjags.RDS ./nimble_dir/results/fcnim.RDS ./stan_dir/results/fcstan.RDS name.R forecast_plot.R
+	$(run-R)
+
+gen_plot.Rout: ./jags_dir/results/genjags.RDS ./nimble_dir/results/gennim.RDS ./stan_dir/results/genstan.RDS name.R gen_plot.R
+	$(run-R)
 
 
 parameter_plot.Rout: ./jags_dir/results/parsjags.RDS ./nimble_dir/results/parsnim.RDS ./stan_dir/results/parsstan.RDS name.R parameter_plot.R

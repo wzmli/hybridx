@@ -1,0 +1,277 @@
+\documentclass{article}
+\usepackage{url}
+
+\begin{document}
+
+\subsection*{To do}
+
+\begin{itemize}
+\item fuss with axis breaks etc. to get rid of collisions
+(see \url{http://stackoverflow.com/questions/41575045/avoiding-axis-tick-label-collision-in-faceted-ggplots})
+\end{itemize}
+
+<<r setup,echo=FALSE>>=
+library(knitr)
+opts_chunk$set(error=FALSE  ## stop on error
+               ,cache=FALSE
+               ,dependson="setup"
+               ,dev="tikz"  ## makes stuff slow!
+               )
+library(tikzDevice)
+options(tikzDocumentDeclaration=
+            c(getOption("tikzDocumentDeclaration"),
+              "\\newcommand{\\symsub}[2]{\\ensuremath{#1_{\\tiny \\mathrm{#2}}}}",
+              "\\newcommand{\\mrm}[1]{\\ensuremath{\\mathrm{#1}}}",
+              "\\newcommand{\\effrep}{\\mrm{effrep}}",
+              "\\newcommand{\\eff}{\\mrm{eff}}",
+              "\\newcommand{\\peff}{\\symsub{P}{eff}}",
+              "\\newcommand{\\peffrep}{\\symsub{P}{effrep}}",
+              "\\newcommand{\\Neff}{\\symsub{N}{eff}}",
+              "\\newcommand{\\prep}{\\symsub{P}{rep}}",
+              "\\newcommand{\\deltaobs}{\\symsub{\\delta}{obs}}",
+              "\\newcommand{\\rep}{\\mrm{rep}}",
+              "\\newcommand{\\BetaBin}{\\mrm{BetaBin}}",
+              "\\newcommand{\\rzero}{\\ensuremath{{\\mathcal R}_0}}"))
+
+library(ggplot2)
+library(dplyr)
+load('.forecast_plot.RData')
+load('.parameter_plot.RData')
+load('.gen_plot.RData')
+
+pardf3 <- (pardf3 
+  %>% select(c(type_ver,process,observation,platform,cov90,TPES,BIAS,MSE,RMSE,parameters))
+  %>% mutate(platform = factor(platform,levels=c("jags","nim","stan"),labels=c("jags","nimble","stan")))
+)
+
+gendat2 <- (gendat2 
+  %>% mutate(platform = factor(platform,levels=c("jags","nim","stan"),
+                               labels=c("jags"  ,"nimble","stan")))
+)
+
+alldf <- rbind(fcdat02,pardf3,gendat2)
+
+showpars <- c("forecast", "R0", "MGI", "effprop", "repprop")
+showparslabs <- c("Forecast","$\\rzero$","Mean\ngeneration\ninterval",
+                  "proportion\nsusceptible\n($\\peff$)",
+                  "proportion\nreported\n($\\prep$)")
+noshowpars <- c("kerShape", "kerPos", "repDis", "pDis")
+noshowparslabs <- c("$G_{s}$", "$G_{p}$", "$\\deltaobs$", "$\\delta_{P}$")
+allpars <- c(showpars,noshowpars)
+alllabs <- c(showparslabs,noshowparslabs)
+platforms <- c("JAGS","NIMBLE","Stan")
+zmargin <- theme(panel.spacing=grid::unit(0,"lines"))
+alldf2 <- alldf %>%
+    mutate(parameters=factor(parameters,levels = allpars,labels=alllabs),
+           observation=gsub("_obs","",observation),
+           process=gsub("_process","",process),
+           process=factor(process,levels = c("bb", "nb", "b", "p"),
+                          labels=c("beta-binomial","neg binomial",
+                                   "binomial","Poisson")),
+           Transmission=process,
+           observation=factor(observation, levels = c("bb","nb","b","p"),
+                             labels = c("bb", "nb", "b", "p")),
+           Observation = observation)
+
+temp <- alldf2 %>% filter(parameters %in% showparslabs)
+temp2 <- alldf2 %>% filter(parameters %in% noshowparslabs)
+
+## this is a hack, but I don't know a better way to do it
+## create a version of label_both that uses a newline in
+## the separator between the variable and the value
+L <- label_both
+formals(L)$sep <- ":\n"  ## ugh!
+attr(L,"class") <- c("function","labeller")
+
+decorate <- function(gg) {
+    return(gg + geom_point(size=3,aes(shape=type_ver))
+        + scale_shape_manual(values=c(1,2,16,17),name="Method"
+                             ,labels=c("Discrete","Dis. Decorrelation"
+                                       ,"Continuous", "Cont. Decorrelation"))
+           + xlab("Observation process")
+           + facet_grid(parameters~Transmission,scale="free",
+                        labeller = labeller(.rows=label_value,
+                                            .cols=L))
+       + theme_bw() + zmargin
+       + scale_color_brewer(palette = "Dark2",name="Platform",
+                            labels=platforms)
+       
+              + theme(strip.text.y=element_text(angle=0)))
+  
+}
+
+@
+
+<<all_bias>>=
+gg <- decorate(ggplot(alldf2,aes(x=Observation,y=BIAS,color=platform))
+               + ylab("Bias")
+               + geom_hline(yintercept = 0)
+)
+print(gg)
+@
+
+<<main_bias>>=
+print(gg %+% temp)
+@
+
+<<sup_bias>>=
+print(gg %+% temp2)
+@
+
+<<all_rmse>>=
+gg2 <- decorate(ggplot(alldf2,aes(x=Observation,y=RMSE,color=platform))
+       + ylab("RMSE")
+       + scale_y_continuous(limits=c(0,NA))  
+)
+print(gg2)
+@
+
+<<main_rmse>>=
+print(gg2 %+% temp)
+@
+
+<<sup_rmse>>=
+print(gg2 %+% temp2 + scale_y_continuous(limits=c(0,NA)))
+@
+
+<<all_coverage>>=
+gg3 <- decorate(ggplot(alldf2,aes(x=as.numeric(observation),
+                                  y=cov90,color=platform))
+        + ylab("Coverage")
+        + facet_grid(parameters~Transmission,scale="free_y",
+                        labeller = labeller(.rows=label_value,
+                                            .cols=L))
+        + geom_hline(yintercept = 0.9)
+        + scale_x_continuous(breaks=1:4,labels=c("bb","nb","b","p"))
+        + annotate("rect",
+                   xmin=0.5,xmax=4.5,
+                   ymin=0.9-2*sqrt(0.9*0.1/100),
+                   ymax=0.9+2*sqrt(0.9*0.1/100),
+                   alpha=0.2)
+        #unique(alldf2$observation))
+        + scale_y_continuous(trans="logit",
+                             ## higher limit?
+                             ## limit needs to be > ymax above
+                             limits=c(0.25,0.965),
+                             breaks=c(0.25,0.5,0.8,0.9,0.95))
+)
+print(gg3)
+@
+
+<<main_coverage>>=
+print(gg3 %+% temp)
+@
+
+<<sup_coverage>>=
+gg3_sup <- decorate(ggplot(temp2,aes(x=as.numeric(observation),
+                                  y=cov90,color=platform))
+        + ylab("Coverage")
+        + annotate("rect",
+                   xmin=0.5,xmax=4.5,
+                   ymin=0.9-2*sqrt(0.9*0.1/100),
+                   ymax=0.9+2*sqrt(0.9*0.1/100),
+                   alpha=0.2)
+        + geom_hline(yintercept = 0.9)
+        + scale_x_continuous(breaks=1:4,labels=c("bb","nb","b","p"))#unique(alldf2$observation))
+        + scale_y_continuous(limits=c(0.01,0.965),
+                             breaks=c(0.01,0.2,0.5,0.8,0.9,0.95))
+        )
+print(gg3_sup) 
+@
+
+<<all_eff>>=
+## produce LaTeX-style 10^d ticks (except for 10^0)
+tex10 <- function(x) {
+    storage.mode(x) <- "integer"
+    ifelse(is.na(x),"",
+           ifelse(x==0,"$1$",
+                  sprintf("$10^{%d}$",x)))
+}
+gg4 <- decorate(ggplot(alldf2,aes(x=Observation,y=TPES,color=platform))
+        + geom_point(size=3,aes(shape=type_ver))
+        + scale_y_log10(limits=c(0.00001,10), ## a little extra space
+                        labels=scales:::trans_format("log10",tex10))
+        + ylab("Time per Effective Sample (s)"))
+print(gg4)
+@
+
+<<main_eff>>=
+print(gg4 %+% temp)
+@
+
+<<sup_eff>>=
+print(gg4 %+% temp2)
+@
+
+<<forecast_bias>>=
+fcdat2_0 <- fcdat2 %>%
+    mutate(observation=gsub("_obs","",observation),
+           process=gsub("_process","",process),
+           process=factor(process,levels = c("bb", "nb", "b", "p"),
+                          labels=c("beta-binomial","neg binomial",
+                                   "binomial","Poisson")),
+           observation=factor(observation, levels = c("bb","nb","b","p"),
+                             labels = c("beta-binomial", "neg binomial", "binomial", "Poisson")),
+           Transmission=process,
+           Observation=observation)    
+
+
+decorate2 <- function(gg) {
+    return(gg + geom_point(size=3,aes(shape=type_ver))
+        + scale_shape_manual(values=c(1,2,16,17),name="Method"
+                             ,labels=c("Discrete","Dis. Decorrelation"
+                                       ,"Continuous", "Cont. Decorrelation"))
+           + xlab("Forecast Step")
+           + facet_grid(Observation~Transmission,scale="free",
+                        labeller = labeller(.rows=L,
+                                            .cols=L))
+       + theme_bw() + zmargin
+       + scale_color_brewer(palette = "Dark2",name="Platform",
+                            labels=platforms)
+       
+              + theme(strip.text.y=element_text(angle=0)))
+  
+}
+
+ff <- decorate2(ggplot(fcdat2_0,aes(x=parameters,y=BIAS,color=platform))
+               + ylab("Bias")
+               + geom_hline(yintercept = 0) )
+print(ff)
+@
+
+<<forecast_rmse>>=
+ff2 <- decorate2(ggplot(fcdat2_0,aes(x=parameters,y=RMSE,color=platform))
+       + ylab("RMSE")
+       + scale_y_continuous(limits=c(0,3))  
+)
+print(ff2)
+@
+
+<<forecast_coverage>>=
+ff3 <- decorate2(ggplot(fcdat2_0,aes(x=as.numeric(parameters),
+                                  y=cov90,color=platform))
+        + ylab("Coverage")
+        + annotate("rect",
+                   xmin=0,xmax=5.5,
+                   ymin=0.9-2*sqrt(0.9*0.1/100),
+                   ymax=0.9+2*sqrt(0.9*0.1/100),
+                   alpha=0.2)
+        + geom_hline(yintercept = 0.9)
+        + scale_x_continuous(breaks=1:5)
+        + scale_y_continuous(limits=c(0.2,1),
+                             breaks=c(0.2,0.5,0.8,0.9,1))
+        )
+print(ff3) 
+@
+
+<<forecast_eff>>=
+## produce LaTeX-style 10^d ticks (except for 10^0)
+ff4 <- decorate2(ggplot(fcdat2_0,aes(x=parameters,y=TPES,color=platform))
+        + geom_point(size=3,aes(shape=type_ver))
+        + scale_y_log10(limits=c(0.00001,10), ## a little extra space
+                        labels=scales:::trans_format("log10",tex10))
+        + ylab("Time per Effective Sample (s)"))
+print(ff4)
+@
+
+\end{document}
