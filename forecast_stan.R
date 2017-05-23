@@ -110,7 +110,10 @@ forecast <- function(n){
   stanobj <- readRDS(paste("./stan_dir/data/",n,sep=""))
   
   name <- unlist(strsplit(n,"[.]"))
-  stanmod <- stanobj[[1]]
+  stanmodraw <- stanobj[[1]]
+  ndim <- nrow(stanmodraw[[1]])
+  stanthin <- lapply(stanmodraw,function(x){mcmc(x,start=1,end=ndim,thin=(ndim/2000))})
+  stanmod <- as.mcmc.list(stanthin)
   timeobj <- stanobj[[2]]
   dat <- stanobj[[3]]
   real <- dat$Iobs[16:20]
@@ -124,7 +127,6 @@ forecast <- function(n){
                      , platform = name[7]
                      , time = time,
                      tempdf)
-  fcdf <- fcdf %>% sample_n(8000)
   type <- name[1]
   if(type=="hyb"){
     fcdf2 <- (fcdf 

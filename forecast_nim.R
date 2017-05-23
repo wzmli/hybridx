@@ -110,7 +110,10 @@ forecast <- function(n){
   nimobj <- readRDS(paste("./nimble_dir/data/",n,sep=""))
   
   name <- unlist(strsplit(n,"[.]"))
-  nimmod <- nimobj[[1]]
+  nimmodraw <- nimobj[[1]]
+  ndim <- nrow(nimmodraw[[1]])
+  nimthin <- lapply(nimmodraw,function(x){mcmc(x,start=1,end=ndim,thin=(ndim/2000))})
+  nimmod <- as.mcmc.list(nimthin)
   timeobj <- nimobj[[2]]
   dat <- nimobj[[3]]
   real <- dat$Iobs[16:20]
@@ -124,7 +127,6 @@ forecast <- function(n){
                      , platform = name[7]
                      , time = time,
                      tempdf)
-  fcdf <- fcdf %>% sample_n(8000)
   type <- name[1]
   if(type=="hyb"){
     fcdf2 <- (fcdf 

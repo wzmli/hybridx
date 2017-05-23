@@ -114,8 +114,10 @@ forecast <- function(n){
   jagsobj <- readRDS(paste("./jags_dir/data/",n,sep=""))
   
   name <- unlist(strsplit(n,"[.]"))
-  jagsmod <- jagsobj[[1]]
-  rownums <- nrow(jagsmod[[1]])
+  jagsmodraw <- jagsobj[[1]]
+  ndim <- nrow(jagsmodraw[[1]])
+  jagsthin <- lapply(jagsmodraw,function(x){mcmc(x,start=1,end=ndim,thin=(ndim/2000))})
+  jagsmod <- as.mcmc.list(jagsthin)
   timeobj <- jagsobj[[2]]
   dat <- jagsobj[[3]]
   real <- dat$Iobs[16:20]
@@ -131,7 +133,7 @@ forecast <- function(n){
                      , time = time,
                      tempdf)
   
-  fcdf <- fcdf %>% sample_n(8000)
+  # fcdf <- fcdf %>% sample_n(8000)
   type <- name[1]
   if(type=="hyb"){
     fcdf2 <- (fcdf 
