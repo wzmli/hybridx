@@ -2,7 +2,7 @@
 
 current: target
 
-target pngtarget pdftarget vtarget acrtarget: forecast_plot.Rout 
+target pngtarget pdftarget vtarget acrtarget: forecastplot_dis.1.bb.bb.50_jags.Rout 
 
 ##################################################################
 
@@ -109,6 +109,16 @@ gen_plot.Rout: ./jags_dir/results/genjags.RDS ./nimble_dir/results/gennim.RDS ./
 parameter_plot.Rout: ./jags_dir/results/parsjags.RDS ./nimble_dir/results/parsnim.RDS ./stan_dir/results/parsstan.RDS name.R parameter_plot.R
 	$(run-R)
 
+
+
+####forecast obs plot
+
+forecastplot_%_jags.Rout: parameters.CBB.Rout simfuns.R forecastplot_jags.R
+	$(run-R)
+
+forecastplot_dis.1.bb.bb.101_jags.Rout:
+
+forecastplot_dis.1.bb.bb.50_jags.Rout:
 
 cleanall:
 	rm -f *.nimble.R *.buggen *.wrapR.r *.Rout *.nimcode *.stan *.init.R *.data.R *.Rlog *.wrapR.rout .sim* .template* .fit* *.jags *.nim jags_dir/data/*.Rds jags_dir/templates/templates* nimble_dir/templates/*.nimcode nimble_dir/data/*.Rds stan_dir/templates/*.stan stan_dir/data/*.Rds
