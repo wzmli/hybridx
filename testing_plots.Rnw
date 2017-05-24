@@ -41,12 +41,11 @@ load('.gen_plot.RData')
 
 pardf3 <- (pardf3 
   %>% select(c(type_ver,process,observation,platform,cov90,TPES,BIAS,MSE,RMSE,parameters))
-  %>% mutate(platform = factor(platform,levels=c("jags","nim","stan"),labels=c("jags","nimble","stan")))
+  %>% mutate(platform = factor(platform,levels=c("jags","nim","stan")))
 )
 
 gendat2 <- (gendat2 
-  %>% mutate(platform = factor(platform,levels=c("jags","nim","stan"),
-                               labels=c("jags"  ,"nimble","stan")))
+  %>% mutate(platform = factor(platform,levels=c("jags","nim","stan")))
 )
 
 alldf <- rbind(fcdat02,pardf3,gendat2)
