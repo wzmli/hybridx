@@ -227,12 +227,12 @@ rownames(fcdf3) <- NULL
 print(head(fcdf3))
 
 dd <- data.frame(parameters=1:10
-                 , real=jagsobj[[3]]$Iobs[6:15]
-                 , q5=jagsobj[[3]]$Iobs[6:15]
-                 , q25=jagsobj[[3]]$Iobs[6:15]
-                 , q50=jagsobj[[3]]$Iobs[6:15]
-                 , q75=jagsobj[[3]]$Iobs[6:15]
-                 , q95=jagsobj[[3]]$Iobs[6:15]
+                 , real=nimobj[[3]]$Iobs[6:15]
+                 , q5=nimobj[[3]]$Iobs[6:15]
+                 , q25=nimobj[[3]]$Iobs[6:15]
+                 , q50=nimobj[[3]]$Iobs[6:15]
+                 , q75=nimobj[[3]]$Iobs[6:15]
+                 , q95=nimobj[[3]]$Iobs[6:15]
 )
 
 fcdf4 <- fcdf3 %>% select(parameters,real,q5,q25,q50,q75,q95)

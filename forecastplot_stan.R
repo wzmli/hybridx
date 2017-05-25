@@ -229,12 +229,12 @@ print(head(fcdf3))
 
 
 dd <- data.frame(parameters=1:10
-                 , real=jagsobj[[3]]$Iobs[6:15]
-                 , q5=jagsobj[[3]]$Iobs[6:15]
-                 , q25=jagsobj[[3]]$Iobs[6:15]
-                 , q50=jagsobj[[3]]$Iobs[6:15]
-                 , q75=jagsobj[[3]]$Iobs[6:15]
-                 , q95=jagsobj[[3]]$Iobs[6:15]
+                 , real=stanobj[[3]]$Iobs[6:15]
+                 , q5=stanobj[[3]]$Iobs[6:15]
+                 , q25=stanobj[[3]]$Iobs[6:15]
+                 , q50=stanobj[[3]]$Iobs[6:15]
+                 , q75=stanobj[[3]]$Iobs[6:15]
+                 , q95=stanobj[[3]]$Iobs[6:15]
 )
 
 fcdf4 <- fcdf3 %>% select(parameters,real,q5,q25,q50,q75,q95)
