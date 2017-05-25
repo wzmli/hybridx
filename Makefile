@@ -2,7 +2,7 @@
 
 current: target
 
-target pngtarget pdftarget vtarget acrtarget: forecastplot_%_jags.Rout 
+target pngtarget pdftarget vtarget acrtarget: forecastplot_hyb.1.bb.nb.11_jags.Rout 
 
 ##################################################################
 

@@ -227,28 +227,42 @@ rownames(fcdf3) <- NULL
 
 print(head(fcdf3))
 
+
 dd <- data.frame(parameters=1:10
-                 , real=stanobj[[3]]$Iobs[6:15]
-                 , q5=stanobj[[3]]$Iobs[6:15]
-                 , q25=stanobj[[3]]$Iobs[6:15]
-                 , q50=stanobj[[3]]$Iobs[6:15]
-                 , q75=stanobj[[3]]$Iobs[6:15]
-                 , q95=stanobj[[3]]$Iobs[6:15]
-                 , type = "real"
+                 , real=jagsobj[[3]]$Iobs[6:15]
+                 , q5=jagsobj[[3]]$Iobs[6:15]
+                 , q25=jagsobj[[3]]$Iobs[6:15]
+                 , q50=jagsobj[[3]]$Iobs[6:15]
+                 , q75=jagsobj[[3]]$Iobs[6:15]
+                 , q95=jagsobj[[3]]$Iobs[6:15]
 )
 
-fcdf4 <- fcdf3 %>% select(parameters,real,q5,q25,q50,q75,q95) %>% mutate(type="estimate")
+fcdf4 <- fcdf3 %>% select(parameters,real,q5,q25,q50,q75,q95)
 
-ddmelt <- rbind(dd,fcdf4) %>% gather(key=obstype,value=obs,-c(parameters,type)) %>% mutate(type=ifelse(obstype=="real","real","estimate"))
+ddmelt <- (rbind(dd,fcdf4) 
+           %>% gather(key=obstype,value=obs,-c(parameters,q5,q25,q75,q95)) 
+           %>% gather(key=lowertype,value=lower,-c(parameters,obstype,obs,q75,q95))
+           %>% gather(key=uppertype,value=upper,-c(parameters,obstype,obs,lowertype,lower))
+           %>% mutate(lowertype=ifelse(lowertype=="q5","c90","c50")
+                      , uppertype=ifelse(uppertype=="q95","c90","c50")
+           )
+           %>% filter(lowertype==uppertype)
+           %>% filter((lowertype=="c50" & obstype =="real") | (lowertype == "c90" & obstype == "q50"))
+           # %>% mutate(obstype=ifelse((lowertype=="c50") & (obstype == "q50"),"q50b",obstype)
+           #            , obstype= ifelse((lowertype=="c50") & (obstype == "real"),"realb",obstype)
+           #            )
+)
 
-gg <- (ggplot(ddmelt,aes(x=parameters,y=obs, group=obstype,color=type,lty=obstype)) 
+gg <- (ggplot(ddmelt,aes(x=parameters,y=obs,lty=obstype)) 
        + geom_line() 
        + geom_point() 
-       + scale_linetype_manual(values=c(2,3,1,2,3,1),breaks=c("q5","q25","q50","q75","q95"),name="Quantiles")
+       + geom_ribbon(aes(ymin=lower,ymax=upper,fill=lowertype),alpha=0.2)
+       + scale_fill_manual(values=c("blue","light blue"),labels=c("50%","90%"),name="Confidence Intervals")
+       + scale_linetype_manual(values=c(2,1),labels=c("Median","Real"),name="Type")
        + theme_bw()
        + xlab("Time steps")
        + ylab("Reported cases")
-       + scale_color_manual(values=c("black","red"),name="Cases")
+       + scale_y_continuous(trans="log1p")
        
 )
 gg
