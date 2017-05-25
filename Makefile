@@ -2,7 +2,7 @@
 
 current: target
 
-target pngtarget pdftarget vtarget acrtarget: forecastplot_%_stan.Rout 
+target pngtarget pdftarget vtarget acrtarget: forecastplot_hyb.1.bb.nb.11_jags.Rout 
 
 ##################################################################
 
@@ -122,6 +122,8 @@ forecastplot_%_nim.Rout: parameters.CBB.Rout simfuns.R forecastplot_nim.R
 forecastplot_%_stan.Rout: parameters.CBB.Rout simfuns.R forecastplot_stan.R
 	$(run-R)
 
+
+forecastplot_hyb.1.bb.nb.11_jags.Rout:
 
 cleanall:
 	rm -f *.nimble.R *.buggen *.wrapR.r *.Rout *.nimcode *.stan *.init.R *.data.R *.Rlog *.wrapR.rout .sim* .template* .fit* *.jags *.nim jags_dir/data/*.Rds jags_dir/templates/templates* nimble_dir/templates/*.nimcode nimble_dir/data/*.Rds stan_dir/templates/*.stan stan_dir/data/*.Rds

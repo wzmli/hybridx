@@ -249,6 +249,7 @@ gg <- (ggplot(ddmelt,aes(x=parameters,y=obs, group=obstype,color=type,lty=obstyp
        + xlab("Time steps")
        + ylab("Reported cases")
        + scale_color_manual(values=c("black","red"),name="Cases")
+       + scale_y_continuous(trans="log1p")
        
 )
 gg
