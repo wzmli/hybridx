@@ -13,7 +13,7 @@ g2 <- gg+ ggtitle("dis.1.b.bb.jags")+ theme(legend.position = "none") # + scale_
 load('.forecastplot_dis.1.bb.b.12_nim.RData')
 
 
-g3 <-gg+ ggtitle("dis.1.bb.p.jags")+ theme(legend.position = "none") # + scale_y_continuous(trans="log1p",breaks=c(0,500,1000,2000,6000))
+g3 <-gg+ ggtitle("dis.1.bb.b.jags")+ theme(legend.position = "none") # + scale_y_continuous(trans="log1p",breaks=c(0,500,1000,2000,6000))
 
 load(".forecastplot_dis.1.bb.bb.12_nim.RData")
 
