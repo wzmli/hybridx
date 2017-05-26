@@ -20,3 +20,29 @@ load(".forecastplot_dis.1.nb.bb.12_nim.RData")
 g4 <- gg+ ggtitle("dis.1.nb.bb.nim")+ theme(legend.position = "none") # + scale_y_continuous(trans="log1p",breaks=c(0,500,1000,2000,6000))
 
 print(grid.arrange(g1,g2,g3,g4,nrow=2))
+
+
+
+
+## set 2 
+
+load(".forecastplot_dis.2.p.b.138_jags.RData")
+
+g5 <- gg+ ggtitle("dis.2.p.b.jags")+ theme(legend.position = "none") # + scale_y_continuous(trans="log1p",breaks=c(0,500,1000,2000,6000))
+
+
+load(".forecastplot_dis.1.b.bb.138_nim.RData")
+
+g6 <- gg+ ggtitle("dis.1.b.bb.nim")+ theme(legend.position = "none") # + scale_y_continuous(trans="log1p",breaks=c(0,500,1000,2000,6000))
+
+
+load(".forecastplot_dis.2.nb.p.138_nim.RData")
+
+g7 <- gg+ ggtitle("dis.2.nb.p.nim")+ theme(legend.position = "none") # + scale_y_continuous(trans="log1p",breaks=c(0,500,1000,2000,6000))
+
+
+load(".forecastplot_hyb.1.bb.nb.138_stan.RData")
+
+g8 <- gg+ ggtitle("hyb.1.bb.nb.stan")+ theme(legend.position = "none") # + scale_y_continuous(trans="log1p",breaks=c(0,500,1000,2000,6000))
+
+print(grid.arrange(g5,g6,g7,g8,nrow=2))
