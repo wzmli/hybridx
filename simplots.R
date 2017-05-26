@@ -10,10 +10,10 @@ load(".forecastplot_hyb.2.p.nb.12_stan.RData")
 
 g2 <- gg+ ggtitle("hyb.2.p.nb.stan")+ theme(legend.position = "none") # + scale_y_continuous(trans="log1p",breaks=c(0,500,1000,2000,6000))
 
-load('.forecastplot_dis.2.bb.p.12_jags.RData')
+load('.forecastplot_hyb.2.bb.p.12_jags.RData')
 
 
-g3 <-gg+ ggtitle("dis.2.bb.p.jags")+ theme(legend.position = "none") # + scale_y_continuous(trans="log1p",breaks=c(0,500,1000,2000,6000))
+g3 <-gg+ ggtitle("hyb.2.bb.p.jags")+ theme(legend.position = "none") # + scale_y_continuous(trans="log1p",breaks=c(0,500,1000,2000,6000))
 
 load(".forecastplot_dis.1.nb.bb.12_nim.RData")
 
@@ -36,13 +36,13 @@ load(".forecastplot_dis.1.b.bb.138_nim.RData")
 g6 <- gg+ ggtitle("dis.1.b.bb.nim")+ theme(legend.position = "none") # + scale_y_continuous(trans="log1p",breaks=c(0,500,1000,2000,6000))
 
 
-load(".forecastplot_dis.2.nb.p.138_nim.RData")
+load(".forecastplot_hyb.2.nb.p.138_stan.RData")
 
-g7 <- gg+ ggtitle("dis.2.nb.p.nim")+ theme(legend.position = "none") # + scale_y_continuous(trans="log1p",breaks=c(0,500,1000,2000,6000))
+g7 <- gg+ ggtitle("hyb.2.nb.p.nim")+ theme(legend.position = "none") # + scale_y_continuous(trans="log1p",breaks=c(0,500,1000,2000,6000))
 
 
-load(".forecastplot_hyb.1.bb.nb.138_stan.RData")
+load(".forecastplot_hyb.1.bb.nb.138_nim.RData")
 
-g8 <- gg+ ggtitle("hyb.1.bb.nb.stan")+ theme(legend.position = "none") # + scale_y_continuous(trans="log1p",breaks=c(0,500,1000,2000,6000))
+g8 <- gg+ ggtitle("hyb.1.bb.nb.nim")+ theme(legend.position = "none") # + scale_y_continuous(trans="log1p",breaks=c(0,500,1000,2000,6000))
 
 print(grid.arrange(g5,g6,g7,g8,nrow=2))
