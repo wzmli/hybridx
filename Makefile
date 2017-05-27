@@ -2,7 +2,7 @@
 
 current: target
 
-target pngtarget pdftarget vtarget acrtarget: simplots.Rout 
+target pngtarget pdftarget vtarget acrtarget: ggsimplots.Rout 
 
 ##################################################################
 
@@ -125,6 +125,9 @@ forecastplot_%_stan.Rout: parameters.CBB.Rout simfuns.R forecastplot_stan.R
 
 
 simplots.Rout: simplots.R
+	$(run-R)
+
+ggsimplots.Rout: simplots.Rout ggsimplots.R
 	$(run-R)
 
 cleanall:
