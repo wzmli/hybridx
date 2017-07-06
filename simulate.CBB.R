@@ -11,8 +11,9 @@ system.time(sim <- simm(N=N
                         , pDshape0=pDshape , pDrate0=pDrate
                         , kerPos0=kerPos
                         , repDshape0=repDshape , repDrate0=repDrate
-                        , numobs=(numobs+forecast),
-                        seed=seed
+                        , numobs=(numobs+forecast)
+                        , seed=seed
+                        , freq=TRUE
 )
 )
 

@@ -26,7 +26,8 @@ simm <- function(N=10000, effprop0=0.5, betasize0=1, repprop0=0.5,
                  kerSize0=1,
                  t0=1, numobs=20, seed=NULL,
                  ksshape0=1, ksrate0=1,
-                 kerPos0=0.5){
+                 kerPos0=0.5,
+                 freq=FALSE){
   
   ## *all* infecteds recover in the next time step
   
@@ -45,13 +46,22 @@ simm <- function(N=10000, effprop0=0.5, betasize0=1, repprop0=0.5,
   kerShape <- rgamma(1,shape=ksshape0,rate=ksrate0) 
   kerPos <- rbeta(1,kerSize0/(1-kerPos0),kerSize0/kerPos0) 
   N0 <- round(effprop*N)
+  R0 <- rgamma(n=1,shape=Rshape0,rate=Rrate0)
+  if(freq){
+    pDis <- pDshape0/pDrate0
+    repDis <- repDshape0/repDrate0
+    effprop <- effprop0
+    repprop <- repprop0
+    kerShape <- ksshape0/ksrate0
+    kerPos <- kerPos0
+    R0 <- Rshape0/Rrate0
+  }
   ker <- exp( (kerShape-1)*log(1:lag) - (1:lag)/(kerPos*lag) )
   
   I[1:lag] <- i0
   S[1:lag] <- N0 - i0
   R[1:lag] <- N-N0
   Iobs[1:lag] <- 0
-  R0 <- rgamma(n=1,shape=Rshape0,rate=Rrate0)
   beta <- (R0/N0) * ker/sum(ker)
   pSI[1:lag] <- 1 - exp(-sum(I[1:lag]*beta))
   ## Generate the Unobserved process I, and observables:

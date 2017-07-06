@@ -1,12 +1,12 @@
 ### Lunchbox main engine
 
 current: target
-
-target pngtarget pdftarget vtarget acrtarget: ggsimplots.Rout 
+-include target.mk
 
 ##################################################################
 
-Sources = Makefile .gitignore README.md LICENSE
+Sources = Makefile .gitignore README.md LICENSE sub.mk
+include sub.mk
 
 ## ADVANCED
 ## The recommended way to change these directories is with a local makefile. 
@@ -17,7 +17,7 @@ code = $(dirroot)/code
 data = $(dirroot)/data
 
 -include local.mk
-ms = $(code)/makestuff
+ms = ./makestuff
 
 # This is the local configuration we happen to be using right now
 # Sources += dev.mk
