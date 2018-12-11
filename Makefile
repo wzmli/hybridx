@@ -30,10 +30,14 @@ Sources += $(wildcard *.R)
 
 # See name.R for name parsing
 
-sim.dis.1.bb.p.1.nim.Rout:
-
-sim.%.Rout: simfuns.R parameters.CBB.R name.R simulate.CBB.R
+sim.%.Rout: simfuns.Rout parameters.CBB.Rout name.R simulate.CBB.R
 	$(run-R)
+
+plot.%.Rout: sim.%.Rout parameters.CBB.Rout plot.R
+	$(run-R)
+
+## sim.dis.1.bb.p.1.jags.Rout: simulate.CBB.R
+## plot.dis.1.bb.p.1.jags.Rout: plot.R
 
 templates.hyb.1.bb.p.1.jags.Rout:
 templates.%.Rout: name.R parameters.CBB.R process_funs.R observations_funs.R bugstemplate_funs.R bugstemplate.R process_stan.R observation_stan.R stantemplate.R 	
