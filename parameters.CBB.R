@@ -1,8 +1,8 @@
 # epi parameters
-R0 <- 1.5
+R0 <- 2
 
 Rshape <- R0
-Rrate <- R0/5
+Rrate <- R0/2
 
 
 # scale parameters
@@ -31,7 +31,7 @@ forecast = 5
 N <- 100000
 i0 <- 1
 N0 <- round(N*effprop)
-numobs <- 50
+numobs <- 100
 eps <- 0.000000001
 epsp <- 0.000000001
 epso <- 0.000000001
