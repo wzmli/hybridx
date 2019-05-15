@@ -104,11 +104,8 @@ params <- paramsfun(vv=version,tt=type,pp=plat,proc=process,obs=observation)
 #            ,"nimble_slice") 
 
 if(plat == "nim"){
-<<<<<<< HEAD
+
 source(paste("./nimble_dir/templates/fit",type,version,process,observation,seed,plat,sep="."))
-=======
-source(paste("./nimble_dir/templates/template",type,version,process,observation,seed,plat,sep="."))
->>>>>>> d2ccf8378f91488fc609e01d1590ad1b626ee65f
   datadir <- "./nimble_dir/data/"
   nimmod <- nimbleModel(code=nimcode,constants=nimcon,data=nimdata,inits=niminits[[1]])
   Cnimmod <- compileNimble(nimmod)
