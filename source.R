@@ -27,6 +27,6 @@ fitmod <- function(name){
 	source("fit.R",local=TRUE)
 }
 
-fitmod("fit.hyb.2.bb.nb.1.1000.nim")
+fitmod("fit.hyb.2.bb.nb.1.nim")
 
 
