@@ -104,9 +104,13 @@ params <- paramsfun(vv=version,tt=type,pp=plat,proc=process,obs=observation)
 #            ,"nimble_slice") 
 
 if(plat == "nim"){
+<<<<<<< HEAD
 source(paste("./nimble_dir/templates/fit",type,version,process,observation,seed,plat,sep="."))
+=======
+source(paste("./nimble_dir/templates/template",type,version,process,observation,seed,plat,sep="."))
+>>>>>>> d2ccf8378f91488fc609e01d1590ad1b626ee65f
   datadir <- "./nimble_dir/data/"
-  nimmod <- nimbleModel(code=nimcode,constants=nimcon,data=nimdata,inits=niminits)
+  nimmod <- nimbleModel(code=nimcode,constants=nimcon,data=nimdata,inits=niminits[[1]])
   Cnimmod <- compileNimble(nimmod)
   configMOD <- configureMCMC(nimmod)
   configMOD$addMonitors(params)
@@ -114,7 +118,8 @@ source(paste("./nimble_dir/templates/fit",type,version,process,observation,seed,
   Cmcmc <- compileNimble(Bmcmc,project = nimmod)
   miter <- miter*2
   while(miter < 1000000){
-  MCMCtime <- system.time(FitModel <-runMCMC(Cmcmc,niter=miter,nburnin = floor(miter/2),nchains=length(niminits),inits=niminits,returnCodaMCMC = TRUE))
+  MCMCtime <- system.time(FitModel <-runMCMC(Cmcmc,niter=miter,nburnin = floor(miter/2),nchains=length(niminits),inits=niminits
+                                             ,samples = TRUE))
     Rhatcalc <- gelman.diag(FitModel[,c("effprop","R0","repprop")])$psrf[,1]
     neff <- effectiveSize(FitModel)[c("effprop","R0","repprop")]
     miter <- miter*2

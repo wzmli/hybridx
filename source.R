@@ -1,4 +1,4 @@
-### Running lunchbox engine without make
+### Running engine without make
 
 fitmod <- function(name){
   ## Naming step
