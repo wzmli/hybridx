@@ -5,8 +5,7 @@ current: target
 
 ##################################################################
 
-Sources = Makefile .gitignore README.md LICENSE sub.mk
-include sub.mk
+Sources = Makefile README.md
 
 ## ADVANCED
 ## The recommended way to change these directories is with a local makefile. 
@@ -17,7 +16,7 @@ code = $(dirroot)/code
 data = $(dirroot)/data
 
 -include local.mk
-ms = ./makestuff
+ms = makestuff
 
 # This is the local configuration we happen to be using right now
 # Sources += dev.mk
@@ -150,15 +149,26 @@ run_dis:
 kill:
 	kill $(jobs -p)
 
-#############
+######################################################################
 
 ### Makestuff
 
-Sources += $(wildcard $(ms)/*.mk)
-Sources += $(wildcard $(ms)/RR/*.*)
-Sources += $(wildcard $(ms)/wrapR/*.*)
+Sources += Makefile
 
--include $(ms)/os.mk
--include $(ms)/git.mk
--include $(ms)/visual.mk
--include $(ms)/wrapR.mk
+## Sources += content.mk
+## include content.mk
+
+Ignore += makestuff
+msrepo = https://github.com/dushoff
+Makefile: makestuff/Makefile
+makestuff/Makefile:
+	git clone $(msrepo)/makestuff
+	ls $@
+
+-include makestuff/os.mk
+
+## -include makestuff/wrapR.mk
+
+-include makestuff/git.mk
+-include makestuff/visual.mk
+-include makestuff/projdir.mk
