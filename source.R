@@ -28,5 +28,7 @@ fitmod <- function(name){
 }
 
 fitmod("fit.hyb.2.bb.nb.1.nim")
+fitmod("fit.hyb.2.bb.nb.1.jags")
+
 
 
