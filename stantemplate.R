@@ -166,6 +166,6 @@ cat(standat[1]
     ,observation_stancode[2]
     ,iterloop[2]
     ,stanmodel[4]
-    ,file = paste("./stan_dir/templates/",templatename,sep="")
+    ,file = paste("./stan_dir/templates/",rtargetname,sep="")
 )
 }

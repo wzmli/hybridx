@@ -1,4 +1,8 @@
-# hybridx
+# Discrete-time Stochastic Epi-model template generator 
+
+All the code in this repo are mainly for our [simulation study](https://journals.sagepub.com/doi/full/10.1177/0962280217747054).
+
+## Other uses
 
 
 ## New pipeline

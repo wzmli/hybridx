@@ -106,7 +106,7 @@ params <- paramsfun(vv=version,tt=type,pp=plat,proc=process,obs=observation)
 
 if(plat == "nim"){
 
-source(paste("./nimble_dir/templates/templates",type,version,process,observation,seed,plat,sep="."))
+source(paste("./nimble_dir/templates/fit",type,version,process,observation,seed,plat,sep="."))
   datadir <- "./nimble_dir/data/"
   nimmod <- nimbleModel(code=nimcode,constants=nimcon,data=nimdata,inits=niminits[[1]])
   Cnimmod <- compileNimble(nimmod)
@@ -131,7 +131,7 @@ source(paste("./nimble_dir/templates/templates",type,version,process,observation
 
 if(plat == "jags"){
   datadir <- "./jags_dir/data/"
-  modfile <- paste("./jags_dir/templates/templates",type,version,process,observation,seed,plat,sep=".")
+  modfile <- paste("./jags_dir/templates/fit",type,version,process,observation,seed,plat,sep=".")
   while(miter < 1000000){
   system.time(jagsmod <- jags.model(data=c(nimdata,nimcon)
                         , inits=niminits

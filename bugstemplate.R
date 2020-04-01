@@ -14,7 +14,7 @@ cat(nimstart[1]
     , observation_code[2]
     , iterloop[2]
     , nimstart[2]
-    , file=paste("./nimble_dir/templates/",templatename,sep=""))
+    , file=paste("./nimble_dir/templates/",rtargetname,sep=""))
 }
 
 if(plat=="jags"){
@@ -27,5 +27,5 @@ cat("model{"
     , process_code[3]
     , observation_code[2]
     , iterloop[2]
-    , "}",file=paste("./jags_dir/templates/",templatename,sep=""))
+    , "}",file=paste("./jags_dir/templates/",rtargetname,sep=""))
 }  

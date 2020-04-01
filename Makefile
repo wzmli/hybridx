@@ -47,6 +47,8 @@ fit.dis.1.bb.bb.1.nim.Rout:
 fit.hyb.1.bb.nb.1.nim.Rout:
 fit.hyb.1.bb.nb.1.stan.Rout:
 
+fit.hyb.1.nb.nb.1.jags.Rout:
+
 fit.%.Rout: name.R sim.%.Rout templates.%.Rout fit.R
 	$(run-R)
 
