@@ -27,7 +27,10 @@ fitmod <- function(name){
 	source("fit.R",local=TRUE)
 }
 
-fitmod("fit.hyb.1.b.nb.1.stan")
+## examples of how to run this
+#fitmod("fit.dis.2.nb.nb.1.jags")
+#fitmod("fit.dis.1.bb.p.1.nim")
+#fitmod("fit.hyb.1.b.nb.1.stan")
 
 
 

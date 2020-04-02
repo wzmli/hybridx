@@ -72,4 +72,3 @@ SIGrate <- 0.1
 mchains <- 4
 mthin <- 1
 miter <- 4000
-miter <- 1000
