@@ -8,15 +8,6 @@ set.seed(seed)
 ## This is the part we want to sub data in instead of simulated data
 dat <- sim
 
-print(dat)
-
-myRound <- nimbleFunction(
-  run=function(x=double()){
-    return(round(x))
-    returnType(double())
-  }
-)
-
 nimbleOptions(verifyConjugatePosteriors=TRUE)
 nimdata <- lme4:::namedList(obs=dat$Iobs[(lag+1):(lag+numobs)])
 
@@ -158,7 +149,7 @@ if(plat == "jags"){
 
 if(plat == "stan"){
   datadir <- "./stan_dir/data/"
-  modfile <- paste("./stan_dir/templates/templates",type,version,process,observation,seed,plat,sep=".")
+  modfile <- paste("./stan_dir/templates/fit",type,version,process,observation,seed,plat,sep=".")
   buildstan <- stan_model(file=modfile
 #                    , data=c(nimdata,nimcon)
 #                    , init=niminits
