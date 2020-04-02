@@ -117,7 +117,7 @@ source(paste("./nimble_dir/templates/fit",type,version,process,observation,seed,
   miter <- miter*2
   while(miter < 1000000){
   MCMCtime <- system.time(FitModel <-runMCMC(Cmcmc,niter=miter,nburnin = floor(miter/2),nchains=length(niminits),inits=niminits
-                                             ,samples = TRUE))
+                                             ,samples = TRUE, samplesAsCodaMCMC = TRUE))
     Rhatcalc <- gelman.diag(FitModel[,c("effprop","R0","repprop")])$psrf[,1]
     neff <- effectiveSize(FitModel)[c("effprop","R0","repprop")]
     miter <- miter*2

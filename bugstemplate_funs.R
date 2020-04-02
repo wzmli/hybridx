@@ -29,7 +29,7 @@ priorfun <- function(ver=1,ty="dis",pl="jags"){
   N0 <- round(effprop*N)")
   if(pl=="nim"){
   N0 <- c("
-  N0 <- myRound(effprop*N)")}
+  N0 <- round(effprop*N)")}
   I <- c("
   I[t] ~ dbin(1,i0)")
   S <- "
